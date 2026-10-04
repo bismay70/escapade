@@ -64,7 +64,7 @@ export default function ExclusiveDeals() {
     return (
         <section className="w-full py-16">
             <div className="max-w-7xl mx-auto px-8">
-                <h2 className="text-4xl font-gilroy-semibold text-center mb-8">
+                <h2 data-motion="heading" className="text-4xl font-gilroy-semibold text-center mb-8">
                     Exclusive Deals & Offers
                 </h2>
 
@@ -101,7 +101,7 @@ export default function ExclusiveDeals() {
                         >
                             {cards.map((card, idx) => (
                                 <SwiperSlide key={idx}>
-                                    <div className="relative h-[420px] rounded-2xl overflow-hidden">
+                                    <div data-motion="card" className="relative h-[420px] rounded-2xl overflow-hidden">
                                         <img
                                             src={card.image}
                                             alt={card.title}

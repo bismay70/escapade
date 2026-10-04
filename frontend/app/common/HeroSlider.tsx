@@ -2,9 +2,12 @@
 
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, Pagination } from "swiper/modules"
+import type { Swiper as SwiperInstance } from "swiper"
+import { useEffect, useRef } from "react"
 import "swiper/css"
 import "swiper/css/pagination"
 import { Button } from "@/components/ui/button"
+import { usePageMotion } from "./HomeMotion"
 
 type SlideItem = {
     title: string
@@ -26,12 +29,24 @@ export default function HeroSlider({
     slides,
     autoplayDelay = 3500,
 }: HeroSliderProps) {
+    const motionEnabled = usePageMotion()
+    const swiperRef = useRef<SwiperInstance | null>(null)
+
+    useEffect(() => {
+        const swiper = swiperRef.current
+        if (!swiper || swiper.destroyed) return
+        // Stop the timer so Swiper's visibility and pointer events cannot
+        // restart autoplay while the page is in reduced motion mode.
+        if (motionEnabled && !swiper.autoplay.running) swiper.autoplay.start()
+        else if (!motionEnabled) swiper.autoplay.stop()
+    }, [motionEnabled])
+
     return (
         <section className="w-full py-16 px-8">
             <div className="max-w-7xl mx-auto">
                 {/* Heading */}
                 <div className="text-center mb-10">
-                    <h2 className="text-4xl font-gilroy-semibold mb-3">
+                    <h2 data-motion="heading" className="text-4xl font-gilroy-semibold mb-3">
                         {heading}
                     </h2>
                     {subheading && (
@@ -44,9 +59,15 @@ export default function HeroSlider({
                 {/* Slider */}
                 <Swiper
                     modules={[Autoplay, Pagination]}
+                    onSwiper={(swiper) => {
+                        swiperRef.current = swiper
+                        if (!motionEnabled) swiper.autoplay.stop()
+                    }}
+                    speed={motionEnabled ? 700 : 0}
                     autoplay={{
                         delay: autoplayDelay,
                         disableOnInteraction: false,
+                        pauseOnMouseEnter: true,
                     }}
                     pagination={{ clickable: true }}
                     loop
@@ -54,7 +75,7 @@ export default function HeroSlider({
                 >
                     {slides.map((slide, idx) => (
                         <SwiperSlide key={idx}>
-                            <div className="relative h-[360px]">
+                            <div data-motion="card" className="relative h-[360px]">
                                 {/* Background */}
                                 <img
                                     src={slide.image}

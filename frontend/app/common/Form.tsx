@@ -6,7 +6,7 @@ export default function NewsletterBanner() {
     return (
         <section className="w-full px-8 py-16">
             <div className="max-w-6xl mx-auto w-full">
-                <div className="relative rounded-3xl overflow-hidden py-20 px-16">
+                <div data-motion="card" className="relative rounded-3xl overflow-hidden py-20 px-16">
 
                     {/* Background Image */}
                     <img

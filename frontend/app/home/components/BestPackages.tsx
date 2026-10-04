@@ -65,7 +65,7 @@ export default function BestPackages() {
     return (
         <section className="w-full py-16">
             <div className="max-w-7xl mx-auto px-8">
-                <h2 className="text-4xl font-gilroy-semibold text-center mb-3">
+                <h2 data-motion="heading" className="text-4xl font-gilroy-semibold text-center mb-3">
                     Explore Our Early Bird Offers
                 </h2>
                 <p className="text-base text-gray-500 font-gilroy-medium text-center mb-8">
@@ -110,7 +110,7 @@ export default function BestPackages() {
                         >
                             {cards.map((card, idx) => (
                                 <SwiperSlide key={idx}>
-                                    <div className="relative h-[420px] rounded-2xl overflow-hidden">
+                                    <div data-motion="card" className="relative h-[420px] rounded-2xl overflow-hidden">
                                         <img
                                             src={card.image}
                                             alt={card.title}

@@ -1,0 +1,12 @@
+backend/.venv/
+backend/data/
+**/__pycache__/
+**/.pytest_cache/
+backend/.env
+*.log
+backups/
+.secrets/
+credentials/
+backend/secrets/
+**/serviceaccount*.json
+**/service-account*.json

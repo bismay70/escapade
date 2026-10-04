@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useId, useState } from "react";
+import { motion } from "motion/react";
+import { usePageMotion } from "./HomeMotion";
 
 const faqs = [
     {
@@ -30,11 +32,13 @@ const faqs = [
 
 export default function FAQ() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const motionEnabled = usePageMotion();
+    const idPrefix = useId();
 
     return (
         <section className="py-12">
             <div className="max-w-4xl mx-auto px-4 text-center">
-                <h2 className="text-4xl font-gilroy-semibold text-[#16242A] mb-3">
+                <h2 data-motion="heading" className="text-4xl font-gilroy-semibold text-[#16242A] mb-3">
                     Frequently Asked Questions
                 </h2>
                 <p className="text-base font-gilroy-medium text-slate-600 mb-14">
@@ -44,13 +48,20 @@ export default function FAQ() {
                 <div className="space-y-4 text-left">
                     {faqs.map((item, index) => {
                         const isOpen = activeIndex === index;
+                        const questionId = `${idPrefix}-question-${index}`;
+                        const answerId = `${idPrefix}-answer-${index}`;
 
                         return (
                             <div
                                 key={index}
+                                data-motion="card"
                                 className="bg-white rounded-lg shadow-none transition-all"
                             >
                                 <button
+                                    type="button"
+                                    id={questionId}
+                                    aria-expanded={isOpen}
+                                    aria-controls={answerId}
                                     onClick={() =>
                                         setActiveIndex(isOpen ? null : index)
                                     }
@@ -59,19 +70,30 @@ export default function FAQ() {
                                     <span className="font-gilroy-semibold text-base text-[#16242A]">
                                         {item.q}
                                     </span>
-                                    <span
-                                        className={`text-2xl transition-transform ${isOpen ? "rotate-45" : ""
-                                            }`}
+                                    <motion.span
+                                        aria-hidden="true"
+                                        animate={{ rotate: isOpen ? 45 : 0 }}
+                                        transition={{ duration: motionEnabled ? 0.25 : 0 }}
+                                        className="text-2xl"
                                     >
                                         +
-                                    </span>
+                                    </motion.span>
                                 </button>
 
-                                {isOpen && (
+                                <motion.div
+                                    id={answerId}
+                                    role="region"
+                                    aria-labelledby={questionId}
+                                    aria-hidden={!isOpen}
+                                    initial={false}
+                                    animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+                                    transition={{ duration: motionEnabled ? 0.32 : 0, ease: [0.22, 1, 0.36, 1] }}
+                                    className="overflow-hidden"
+                                >
                                     <div className="px-6 pb-5 text-gray-600 text-sm font-gilroy-medium leading-relaxed">
                                         {item.a}
                                     </div>
-                                )}
+                                </motion.div>
                             </div>
                         );
                     })}

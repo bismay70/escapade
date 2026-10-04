@@ -65,7 +65,7 @@ export default function Hotels() {
     return (
         <section className="w-full py-16">
             <div className="max-w-7xl mx-auto px-8">
-                <h2 className="text-4xl font-gilroy-semibold text-center mb-3">
+                <h2 data-motion="heading" className="text-4xl font-gilroy-semibold text-center mb-3">
                     Top Budget-Friendly Hotels
                 </h2>
                 <p className="text-base text-gray-500 font-gilroy-medium text-center mb-8">
@@ -92,7 +92,7 @@ export default function Hotels() {
                         >
                             {cards.map((card, idx) => (
                                 <SwiperSlide key={idx}>
-                                    <div className="bg-white rounded-lg overflow-hidden transition-shadow">
+                                    <div data-motion="card" className="bg-white rounded-lg overflow-hidden transition-shadow">
 
                                         {/* Image */}
                                         <div className="relative h-[200px] p-3">

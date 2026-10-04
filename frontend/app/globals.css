@@ -1,6 +1,38 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Page-specific motion preference. Transform animation stays on inner cards,
+   leaving Swiper's own positioning and the document scroll untouched. */
+.home-motion-surface { overflow-x: clip; }
+.home-motion-toggle {
+  position: fixed; bottom: 76px; left: 20px; z-index: 60;
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 13px; border: 1px solid rgb(255 255 255 / .65);
+  border-radius: 999px; background: rgb(16 33 62 / .9); color: white;
+  box-shadow: 0 5px 20px rgb(0 0 0 / .12);
+  font: 12px "Gilroy Medium", Arial, sans-serif;
+  cursor: pointer; backdrop-filter: blur(12px);
+}
+.home-motion-toggle:focus-visible { outline: 3px solid #FF6A00; outline-offset: 3px; }
+.home-motion-surface[data-home-motion="full"] [data-motion="card"] {
+  transition: translate .45s cubic-bezier(.22,1,.36,1), box-shadow .45s ease;
+}
+.home-motion-surface[data-home-motion="full"] [data-motion="card"] img {
+  transition: scale .9s cubic-bezier(.22,1,.36,1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .home-motion-surface[data-home-motion="full"] [data-motion="card"]:hover {
+    translate: 0 -5px;
+    box-shadow: 0 18px 35px -22px rgb(16 33 62 / .36);
+  }
+  .home-motion-surface[data-home-motion="full"] [data-motion="card"]:hover img { scale: 1.045; }
+  .home-motion-surface[data-home-motion="full"] [data-motion="gallery-card"] img { transition: scale .7s ease; }
+  .home-motion-surface[data-home-motion="full"] [data-motion="gallery-card"]:hover img { scale: 1.1; }
+}
+@media (max-width: 640px) {
+  .home-motion-toggle { bottom: 78px; left: 12px; font-size: 10px; padding: 8px 10px; }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

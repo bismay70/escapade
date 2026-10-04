@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePageMotion } from '../../common/HomeMotion';
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
@@ -42,10 +43,12 @@ function TapeRow({ items }: { items: typeof ROW_1 }) {
 }
 
 export default function Partners() {
+    const motionEnabled = usePageMotion();
     const tape1Ref = useRef<HTMLDivElement>(null);
     const tape2Ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        if (!motionEnabled) return;
         const ctx = gsap.context(() => {
             const anim1 = gsap.fromTo(
                 tape1Ref.current,
@@ -75,7 +78,7 @@ export default function Partners() {
         });
 
         return () => ctx.revert();
-    }, []);
+    }, [motionEnabled]);
 
     return (
         <section className="w-full bg-[#F2F4F6] py-16 overflow-hidden">

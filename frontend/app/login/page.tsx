@@ -5,6 +5,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { travelApi } from "@/lib/travel";
 
 type FirebaseApp = object;
 
@@ -18,7 +19,9 @@ type FirebaseConfig = {
 };
 
 type FirebaseAuth = {
-  signInWithPopup: (provider: FirebaseGoogleAuthProvider) => Promise<unknown>;
+  signInWithPopup: (provider: FirebaseGoogleAuthProvider) => Promise<{ user: { getIdToken: (forceRefresh?: boolean) => Promise<string> } | null }>;
+  setPersistence: (persistence: string) => Promise<void>;
+  signOut: () => Promise<void>;
 };
 
 type FirebaseGoogleAuthProvider = object;
@@ -30,6 +33,7 @@ type FirebaseNamespace = {
   auth: {
     (app?: FirebaseApp): FirebaseAuth;
     GoogleAuthProvider: new () => FirebaseGoogleAuthProvider;
+    Auth: { Persistence: { NONE: string } };
   };
 };
 
@@ -63,13 +67,15 @@ export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [appReady, setAppReady] = useState(false);
+  const [firebaseReady, setFirebaseReady] = useState(false);
 
   const handleGoogleSignIn = async () => {
     try {
       setError("");
       setLoading(true);
 
-      if (Object.values(firebaseConfig).some((value) => !value)) {
+      if ([firebaseConfig.apiKey, firebaseConfig.authDomain, firebaseConfig.projectId, firebaseConfig.appId].some((value) => !value)) {
         throw new Error("Firebase configuration is missing. Add your NEXT_PUBLIC_FIREBASE_* values to .env.local.");
       }
 
@@ -80,8 +86,16 @@ export default function LoginPage() {
 
       const app = firebase.apps.length > 0 ? firebase.app() : firebase.initializeApp(firebaseConfig);
       const provider = new firebase.auth.GoogleAuthProvider();
-      await firebase.auth(app).signInWithPopup(provider);
-      router.push("/home");
+      const auth = firebase.auth(app);
+      await auth.setPersistence(firebase.auth.Auth.Persistence.NONE);
+      const result = await auth.signInWithPopup(provider);
+      if (!result.user) throw new Error("Google did not return a user. Please try again.");
+      const idToken = await result.user.getIdToken(true);
+      await travelApi("auth/session", { method: "POST", body: JSON.stringify({ id_token: idToken }) });
+      await auth.signOut().catch(() => undefined);
+      const next = new URLSearchParams(window.location.search).get("next");
+      router.push(next === "/bookings" ? "/bookings" : "/planner");
+      router.refresh();
     } catch (signInError) {
       setError(signInError instanceof Error ? signInError.message : "Failed to sign in with Google.");
     } finally {
@@ -91,8 +105,8 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-white text-[#10213E] lg:grid lg:grid-cols-2">
-      <Script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" strategy="afterInteractive" />
-      <Script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" strategy="afterInteractive" />
+      <Script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" strategy="afterInteractive" onReady={() => setAppReady(true)} onError={() => setError("The sign-in library could not load. Check your connection and reload.")} />
+      {appReady && <Script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" strategy="afterInteractive" onReady={() => setFirebaseReady(true)} onError={() => setError("The sign-in library could not load. Check your connection and reload.")} />}
 
       <section className="relative hidden min-h-screen overflow-hidden lg:block">
         <Image
@@ -120,7 +134,7 @@ export default function LoginPage() {
             <p className="text-sm font-semibold uppercase tracking-widest text-[#1D4ED8]">Welcome</p>
             <h2 className="mt-3 text-4xl leading-tight text-[#10213E] sm:text-5xl">Sign in to continue.</h2>
             <p className="mt-5 max-w-sm text-base leading-relaxed text-slate-600">
-              Continue with your Google account to access Vacanes.
+              Save your travel preferences and manage bookings with your Google account. You can explore the planner as a guest.
             </p>
           </div>
 
@@ -133,12 +147,13 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={handleGoogleSignIn}
-            disabled={loading}
+            disabled={loading || !firebaseReady}
             className="mt-10 flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-blue-200 bg-blue-50 px-5 text-base font-semibold text-[#10213E] transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <GoogleIcon />
-            {loading ? "Authenticating..." : "Continue with Google"}
+            {loading ? "Authenticating..." : !firebaseReady ? "Loading sign-in..." : "Continue with Google"}
           </button>
+          <Link href="/planner" className="mt-5 block text-center text-sm font-medium text-slate-600 transition-colors hover:text-blue-700">Continue to the planner as a guest</Link>
         </div>
       </section>
     </main>

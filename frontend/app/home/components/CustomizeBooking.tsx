@@ -1,6 +1,7 @@
 "use client"
 
 import { ArrowRight, MapPin, IndianRupee, Layers, Route } from "lucide-react"
+import Link from "next/link"
 
 export default function CustomizeBooking() {
     return (
@@ -8,7 +9,7 @@ export default function CustomizeBooking() {
             <div className="max-w-6xl mx-auto space-y-5">
 
                 {/* ── Dark Maroon Banner ── */}
-                <div className="relative rounded-3xl overflow-hidden bg-[#5c1a2e] flex flex-col md:flex-row items-center min-h-[220px]">
+                <div data-motion="card" className="relative rounded-3xl overflow-hidden bg-[#5c1a2e] flex flex-col md:flex-row items-center min-h-[220px]">
                     {/* Decorative scattered elements */}
                     <span className="absolute top-6 left-40 w-4 h-4 rounded-full border border-white/20" />
                     <span className="absolute top-12 left-52 w-2 h-2 rounded-full bg-white/20" />
@@ -48,10 +49,10 @@ export default function CustomizeBooking() {
                         <p className="text-white/70 text-sm mb-6 max-w-md">
                             Travelers have saved over <span className="underline font-semibold text-white">₹5 crore</span> booking customized trips with Vacanes' AI planner.
                         </p>
-                        <button className="border border-white/60 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-white hover:text-[#5c1a2e] transition-all flex items-center gap-2 w-fit">
+                        <Link href="/planner" className="border border-white/60 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-white hover:text-[#5c1a2e] transition-all flex items-center gap-2 w-fit">
                             Customize Your Booking
                             <ArrowRight className="w-4 h-4" />
-                        </button>
+                        </Link>
                     </div>
                 </div>
 
@@ -59,7 +60,7 @@ export default function CustomizeBooking() {
                 <div className="grid grid-cols-12 grid-rows-2 gap-5 h-[680px]">
 
                     {/* Card 1 — Dining (large, left) */}
-                    <div className="col-span-12 md:col-span-5 row-span-1 relative rounded-2xl overflow-hidden group bg-[#f5ece4]">
+                    <div data-motion="card" className="col-span-12 md:col-span-5 row-span-1 relative rounded-2xl overflow-hidden group bg-[#f5ece4]">
                         <div className="absolute inset-0 flex flex-col justify-between p-8 z-10">
                             <h3 className="text-3xl font-semibold text-[#5c1a2e] leading-tight max-w-[160px]"
                                 style={{ fontFamily: "var(--font-editorial-new)" }}>
@@ -83,7 +84,7 @@ export default function CustomizeBooking() {
                     </div>
 
                     {/* Card 2 — Palace Wedding (right top) */}
-                    <div className="col-span-12 md:col-span-7 row-span-1 relative rounded-2xl overflow-hidden group bg-[#1a3a2a]">
+                    <div data-motion="card" className="col-span-12 md:col-span-7 row-span-1 relative rounded-2xl overflow-hidden group bg-[#1a3a2a]">
                         <img
                             src="https://images.unsplash.com/photo-1519741347686-c1e331fcb4d0?q=80&w=2070&auto=format&fit=crop"
                             alt="Palace Wedding"
@@ -110,7 +111,7 @@ export default function CustomizeBooking() {
                     </div>
 
                     {/* Card 3 — Suites & Rooms (wide bottom left) */}
-                    <div className="col-span-12 md:col-span-7 row-span-1 relative rounded-2xl overflow-hidden group bg-[#1a3a2a] flex flex-col p-8 justify-between">
+                    <div data-motion="card" className="col-span-12 md:col-span-7 row-span-1 relative rounded-2xl overflow-hidden group bg-[#1a3a2a] flex flex-col p-8 justify-between">
                         <img
                             src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2070&auto=format&fit=crop"
                             alt="Suite"
@@ -141,7 +142,7 @@ export default function CustomizeBooking() {
                     </div>
 
                     {/* Card 4 — Packages & Offers (bottom right) */}
-                    <div className="col-span-12 md:col-span-5 row-span-1 relative rounded-2xl overflow-hidden group bg-white flex flex-col p-8 justify-between border border-gray-100 shadow-sm">
+                    <div data-motion="card" className="col-span-12 md:col-span-5 row-span-1 relative rounded-2xl overflow-hidden group bg-white flex flex-col p-8 justify-between border border-gray-100 shadow-sm">
                         <div>
                             <h3 className="text-4xl font-semibold text-[#16242A] leading-tight mb-3"
                                 style={{ fontFamily: "var(--font-editorial-new)" }}>
@@ -180,7 +181,7 @@ export default function CustomizeBooking() {
                         { icon: <MapPin className="w-5 h-5" />, label: "Flexible Planning" },
                         { icon: <IndianRupee className="w-5 h-5" />, label: "Budget-Friendly" },
                     ].map((f) => (
-                        <div key={f.label} className="flex items-center gap-3 bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                        <div key={f.label} data-motion="card" className="flex items-center gap-3 bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                             <span className="text-[#FF6A00]">{f.icon}</span>
                             <span className="text-sm font-semibold text-[#16242A]">{f.label}</span>
                         </div>
