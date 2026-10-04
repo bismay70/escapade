@@ -12,7 +12,7 @@ export default function Gallery() {
     return (
         <section className="pb-12 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 text-center">
-                <h2 className="text-4xl font-gilroy-semibold text-[#16242A] mb-2">
+                <h2 data-motion="heading" className="text-4xl font-gilroy-semibold text-[#16242A] mb-2">
                     Gallery
                 </h2>
                 <p className="text-base font-gilroy-medium text-slate-600 mb-16">
@@ -34,11 +34,13 @@ export default function Gallery() {
                                 }
               `}
                         >
-                            <img
-                                src={img}
-                                alt="gallery"
-                                className="w-full h-full object-cover"
-                            />
+                            <div data-motion="gallery-card" className="w-full h-full">
+                                <img
+                                    src={img}
+                                    alt="gallery"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>

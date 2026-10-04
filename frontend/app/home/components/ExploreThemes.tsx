@@ -45,7 +45,7 @@ export default function ExploreThemes() {
             <div className="max-w-7xl mx-auto ">
                 {/* Heading */}
                 <div className="text-center mb-10">
-                    <h2 className="text-4xl font-gilroy-semibold mb-3">
+                    <h2 data-motion="heading" className="text-4xl font-gilroy-semibold mb-3">
                         Explore Our Themes
                     </h2>
                     <p className="text-base text-gray-500 font-gilroy-medium">
@@ -69,7 +69,7 @@ export default function ExploreThemes() {
                         >
                             {themes.map((theme, idx) => (
                                 <SwiperSlide key={idx}>
-                                    <div className="flex flex-col">
+                                    <div data-motion="card" className="flex flex-col">
                                         <div className="relative h-[300px] rounded-2xl overflow-hidden">
                                             <img
                                                 src={theme.image}

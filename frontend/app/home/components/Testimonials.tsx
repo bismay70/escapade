@@ -35,7 +35,7 @@ export default function Testimonials() {
                         <p className="text-sm uppercase tracking-widest text-[#FF6A00] font-semibold mb-3">
                             What Our Guests Say
                         </p>
-                        <h2
+                        <h2 data-motion="heading"
                             className="text-4xl md:text-5xl font-semibold text-[#16242A] leading-tight"
                             style={{ fontFamily: "var(--font-editorial-new)" }}
                         >
@@ -60,7 +60,7 @@ export default function Testimonials() {
                 </div>
 
                 {/* Card */}
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 rounded-3xl overflow-hidden shadow-xl">
+                <div data-motion="card" className="grid grid-cols-1 lg:grid-cols-5 gap-6 rounded-3xl overflow-hidden shadow-xl">
                     {/* Image Panel */}
                     <div className="lg:col-span-2 relative h-64 lg:h-auto">
                         <img

@@ -16,6 +16,8 @@ import Partners from './components/Partners'
 import Gallery from './components/Gallery'
 import Testimonials from './components/Testimonials'
 import FAQ from '../common/FAQ'
+import ScrollReveal from '../common/ScrollReveal'
+import HomeMotion from '../common/HomeMotion'
 
 
 const slides = [
@@ -42,31 +44,35 @@ const slides = [
 
 const HomePage = () => {
     return (
+        <HomeMotion>
         <section>
             <Hero />
-            <ComfortZone />
-            <ExclusiveDeals />
-            <HeroBanner />
-            <ExploreThemes />
+            <ScrollReveal variant="slide"><ComfortZone /></ScrollReveal>
+            <ScrollReveal><ExclusiveDeals /></ScrollReveal>
+            <ScrollReveal><HeroBanner /></ScrollReveal>
+            <ScrollReveal variant="scale"><ExploreThemes /></ScrollReveal>
+            <ScrollReveal>
             <HeroSlider
                 heading="Experience the Extraordinary"
                 subheading="Immerse yourself in extraordinary journeys tailored to your style"
                 slides={slides}
             />
-            <EarlyBirdOffers />
-            <WeOfferBest />
-            <HowItWorks />
-            <BestPackages />
-            <Hotels />
-            <NewsletterBanner />
-            <CustomizeBooking />
-            <VacanesBlogs />
+            </ScrollReveal>
+            <ScrollReveal><EarlyBirdOffers /></ScrollReveal>
+            <ScrollReveal><WeOfferBest /></ScrollReveal>
+            <ScrollReveal><HowItWorks /></ScrollReveal>
+            <ScrollReveal><BestPackages /></ScrollReveal>
+            <ScrollReveal><Hotels /></ScrollReveal>
+            <ScrollReveal><NewsletterBanner /></ScrollReveal>
+            <ScrollReveal variant="slide"><CustomizeBooking /></ScrollReveal>
+            <ScrollReveal><VacanesBlogs /></ScrollReveal>
             {/* <ExploreTheWorld /> */}
-            <Partners />
-            <Testimonials />
-            <Gallery />
-            <FAQ />
+            <ScrollReveal><Partners /></ScrollReveal>
+            <ScrollReveal><Testimonials /></ScrollReveal>
+            <ScrollReveal variant="scale"><Gallery /></ScrollReveal>
+            <ScrollReveal><FAQ /></ScrollReveal>
         </section>
+        </HomeMotion>
     )
 }
 

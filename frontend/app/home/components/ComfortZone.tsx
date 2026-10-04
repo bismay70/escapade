@@ -20,7 +20,7 @@ const ComfortZone = () => {
                 {/* Left Column */}
                 <div className="flex flex-col gap-4">
                     {/* Top Left Card */}
-                    <div className="bg-[#1f1b18] rounded-2xl p-8 flex flex-col justify-between h-[300px] text-white">
+                    <div data-motion="card" className="bg-[#1f1b18] rounded-2xl p-8 flex flex-col justify-between h-[300px] text-white">
                         <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center mb-4">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <circle cx="12" cy="12" r="10"></circle>
@@ -42,7 +42,7 @@ const ComfortZone = () => {
                     </div>
 
                     {/* Bottom Left Card */}
-                    <div className="relative rounded-2xl overflow-hidden h-[250px]">
+                    <div data-motion="card" className="relative rounded-2xl overflow-hidden h-[250px]">
                         <img 
                             src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop" 
                             alt="Hotel Room" 
@@ -57,7 +57,7 @@ const ComfortZone = () => {
                 </div>
 
                 {/* Right Column */}
-                <div className="relative rounded-2xl overflow-hidden h-[566px] md:h-auto">
+                <div data-motion="card" className="relative rounded-2xl overflow-hidden h-[566px] md:h-auto">
                     <img 
                         src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=1974&auto=format&fit=crop" 
                         alt="Luxury Bedroom" 

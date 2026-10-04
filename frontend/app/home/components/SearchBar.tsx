@@ -1,11 +1,13 @@
 'use client'
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { Preferences, travelApi } from "@/lib/travel"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { CalendarDays, Hotel, Car, MapPin, Train, Bus, Plane, Ship, Package } from "lucide-react"
+import { Hotel, Car, MapPin, Train, Bus, Plane, Ship, Package } from "lucide-react"
 
 const tabs = [
     { label: "Packages", icon: Package },
@@ -21,16 +23,40 @@ const tabs = [
 export default function SearchBar() {
     const [activeTab, setActiveTab] = useState("Packages")
     const [addFlight, setAddFlight] = useState(false)
+    const [origin, setOrigin] = useState("")
+    const [destination, setDestination] = useState("")
+    const [theme, setTheme] = useState<Preferences["travel_style"]>("solo")
+    const [travelers, setTravelers] = useState("2-1")
+    const [from, setFrom] = useState("")
+    const [to, setTo] = useState("")
+    const [busy, setBusy] = useState(false)
+    const [error, setError] = useState("")
+    const router = useRouter()
+
+    async function search(event: React.FormEvent) {
+        event.preventDefault()
+        if (busy) return
+        setBusy(true); setError("")
+        try {
+            const { preferences } = await travelApi<{ preferences: Preferences }>("profile")
+            const next = { ...preferences, origin, destination, travel_style: theme,
+                travelers: Number(travelers.split("-")[0]), departure_date: from || null, return_date: to || null,
+                transport: activeTab === "Flights" || addFlight ? "flight" as const : preferences.transport }
+            await travelApi("profile", { method: "PUT", body: JSON.stringify(next) })
+            router.push(activeTab === "Flights" || activeTab === "Hotels" ? `/bookings?kind=${activeTab === "Hotels" ? "hotel" : "flight"}` : "/planner")
+        } catch (problem) { setError(problem instanceof Error ? problem.message : "Search could not start. Please try again.") }
+        finally { setBusy(false) }
+    }
 
     return (
-        <div className="w-full max-w-6xl mx-auto px-6">
+        <div className="w-full max-w-6xl mx-auto px-0 sm:px-6">
             {/* Tabs */}
             <div className="flex justify-between gap-2 overflow-x-auto">
                 {tabs.map(({ label, icon: Icon }) => (
                     <button
                         key={label}
                         onClick={() => setActiveTab(label)}
-                        className={`flex items-center gap-2 px-6 py-2 text-sm font-medium transition rounded-t-lg font-gilroy-medium ${activeTab === label
+                        className={`flex shrink-0 items-center gap-2 px-4 lg:px-6 py-2 text-sm font-medium transition rounded-t-lg font-gilroy-medium ${activeTab === label
                             ? "bg-[#CEDDE7] text-black"
                             : "text-white/80 hover:bg-black/60 bg-black/70"
                             }`}
@@ -43,17 +69,17 @@ export default function SearchBar() {
 
             {/* Search Card */}
             <Card className="rounded-none bg-[#CEDDE7] p-4 border-none rounded-b-lg">
-                <div className="flex gap-2 items-end box-border">
+                <form onSubmit={search}><fieldset disabled={busy} className="grid grid-cols-2 sm:grid-cols-3 xl:flex gap-2 items-stretch box-border min-w-0">
 
                     <FieldBox>
                         <Field label="Leaving From">
-                            <Select>
-                                <SelectTrigger className="border-none p-0 shadow-none !text-black font-gilroy-medium">
-                                    <SelectValue placeholder="Select leaving Location" />
+                            <Select value={origin} onValueChange={setOrigin}>
+                                <SelectTrigger aria-label="Leaving from" className="border-none p-0 shadow-none !text-black font-gilroy-medium w-full min-w-0">
+                                    <SelectValue placeholder="Choose origin" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="delhi">Delhi</SelectItem>
-                                    <SelectItem value="mumbai">Mumbai</SelectItem>
+                                    <SelectItem value="DEL">Delhi</SelectItem>
+                                    <SelectItem value="BOM">Mumbai</SelectItem>
                                 </SelectContent>
                             </Select>
                         </Field>
@@ -61,13 +87,13 @@ export default function SearchBar() {
 
                     <FieldBox>
                         <Field label="Destination">
-                            <Select>
-                                <SelectTrigger className="border-none p-0 shadow-none font-gilroy-medium">
-                                    <SelectValue placeholder="Select Destination" />
+                            <Select value={destination} onValueChange={setDestination}>
+                                <SelectTrigger aria-label="Destination" className="border-none p-0 shadow-none font-gilroy-medium w-full min-w-0">
+                                    <SelectValue placeholder="Choose destination" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="goa">Goa</SelectItem>
-                                    <SelectItem value="manali">Manali</SelectItem>
+                                    <SelectItem value="Goa">Goa</SelectItem>
+                                    <SelectItem value="Manali">Manali</SelectItem>
                                 </SelectContent>
                             </Select>
                         </Field>
@@ -75,14 +101,14 @@ export default function SearchBar() {
 
                     <FieldBox>
                         <Field label="Theme">
-                            <Select defaultValue="solo">
-                                <SelectTrigger className="border-none p-0 shadow-none font-gilroy-medium">
+                            <Select value={theme} onValueChange={value => setTheme(value as Preferences["travel_style"])}>
+                                <SelectTrigger aria-label="Travel theme" className="border-none p-0 shadow-none font-gilroy-medium w-full min-w-0">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="solo">Solo Travel</SelectItem>
                                     <SelectItem value="family">Family</SelectItem>
-                                    <SelectItem value="honeymoon">Honeymoon</SelectItem>
+                                    <SelectItem value="couple">Honeymoon</SelectItem>
                                 </SelectContent>
                             </Select>
                         </Field>
@@ -92,10 +118,9 @@ export default function SearchBar() {
                         <Field label="From">
                             <div className="relative">
                                 <Input
-                                    placeholder="DD-MM"
-                                    className="border-none p-0 shadow-none font-gilroy-medium"
+                                    type="date" aria-label="Departure date" value={from} onChange={event => setFrom(event.target.value)}
+                                    className="border-none p-0 shadow-none font-gilroy-medium min-w-0 w-full"
                                 />
-                                <CalendarDays className="absolute right-0 top-1 h-4 w-4 text-muted-foreground" />
                             </div>
                         </Field>
                     </FieldBox>
@@ -104,18 +129,17 @@ export default function SearchBar() {
                         <Field label="To">
                             <div className="relative">
                                 <Input
-                                    placeholder="DD-MM"
-                                    className="border-none p-0 shadow-none font-gilroy-medium"
+                                    type="date" aria-label="Return date" value={to} min={from || undefined} onChange={event => setTo(event.target.value)}
+                                    className="border-none p-0 shadow-none font-gilroy-medium min-w-0 w-full"
                                 />
-                                <CalendarDays className="absolute right-0 top-1 h-4 w-4 text-muted-foreground" />
                             </div>
                         </Field>
                     </FieldBox>
 
                     <FieldBox>
                         <Field label="Travelers">
-                            <Select defaultValue="2-1">
-                                <SelectTrigger className="border-none p-0 shadow-none font-gilroy-medium">
+                            <Select value={travelers} onValueChange={setTravelers}>
+                                <SelectTrigger aria-label="Travelers" className="border-none p-0 shadow-none font-gilroy-medium w-full min-w-0">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -127,11 +151,12 @@ export default function SearchBar() {
                         </Field>
                     </FieldBox>
 
-                    <Button className="h-full rounded-lg bg-slate-800 text-white hover:bg-slate-700">
-                        Search
+                    <Button type="submit" disabled={busy} className="col-span-2 sm:col-span-3 xl:col-span-1 h-full min-h-10 rounded-lg bg-slate-800 text-white hover:bg-slate-700">
+                        {busy ? "Opening…" : "Search"}
                     </Button>
 
-                </div>
+                </fieldset></form>
+                {error && <p role="alert" className="text-sm text-red-900 mt-2">{error}</p>}
             </Card>
 
 
@@ -157,7 +182,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 const FieldBox = ({ children }: { children: React.ReactNode }) => (
-    <div className="bg-white px-4 pt-2 rounded-lg">
+    <div className="bg-white px-3 pt-2 rounded-lg min-w-0 xl:flex-1">
         {children}
     </div>
 )

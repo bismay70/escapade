@@ -41,7 +41,7 @@ export default function VacanesBlogs() {
             <div className="max-w-6xl mx-auto">
                 {/* Heading */}
                 <div className="text-center mb-14">
-                    <h2 className="text-4xl font-gilroy-semibold text-gray-900">
+                    <h2 data-motion="heading" className="text-4xl font-gilroy-semibold text-gray-900">
                         Vacanes Blogs
                     </h2>
 
@@ -54,7 +54,7 @@ export default function VacanesBlogs() {
                 {/* Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Featured Blog */}
-                    <div className="relative rounded-3xl overflow-hidden md:row-span-1">
+                    <div data-motion="card" className="relative rounded-3xl overflow-hidden md:row-span-1">
                         <img
                             src={blogs.featured.image}
                             alt={blogs.featured.title}
@@ -100,6 +100,7 @@ export default function VacanesBlogs() {
                         {blogs.list.map((blog, idx) => (
                             <div
                                 key={idx}
+                                data-motion="card"
                                 className="bg-white rounded-2xl p-4 flex gap-5 md:row-span-1"
                             >
                                 <img

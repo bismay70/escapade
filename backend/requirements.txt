@@ -1,0 +1,11 @@
+fastapi>=0.115,<1
+uvicorn>=0.34,<1
+httpx>=0.28,<1
+python-dotenv>=1,<2
+langgraph>=1,<2
+langchain-core>=1,<2
+langchain-mcp-adapters>=0.2,<1
+mcp>=1.20,<2
+pytest>=8,<10
+stripe>=12,<16
+firebase-admin>=6,<8
