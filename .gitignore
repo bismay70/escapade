@@ -10,3 +10,5 @@ credentials/
 backend/secrets/
 **/serviceaccount*.json
 **/service-account*.json
+
+.claude
