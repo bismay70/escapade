@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 const allowed: Record<string, string[]> = {
   "profile": ["GET", "PUT"],
   "memory": ["GET", "DELETE"],
+  "memory/long-term": ["GET", "POST"],
   "ai/agent": ["POST"],
   "planner": ["POST"],
   "flights": ["POST"],
@@ -16,12 +17,20 @@ const allowed: Record<string, string[]> = {
   "bookings/quote": ["POST"],
   "bookings/drafts": ["POST"],
   "payments/webhook": ["POST"],
+  "approvals": ["GET"],
+  "workflows": ["GET", "POST"],
+  "agents/roles": ["GET"],
+  "trace": ["GET"],
+  "metrics": ["GET"],
 };
 
 function methodsFor(path: string): string[] {
   if (allowed[path]) return allowed[path];
   if (/^bookings\/[a-zA-Z0-9_-]{1,96}$/.test(path)) return ["GET"];
   if (/^bookings\/[a-zA-Z0-9_-]{1,96}\/(checkout|reserve)$/.test(path)) return ["POST"];
+  if (/^approvals\/[a-zA-Z0-9_-]{1,96}\/decide$/.test(path)) return ["POST"];
+  if (/^workflows\/[a-zA-Z0-9_-]{1,96}$/.test(path)) return ["PATCH"];
+  if (/^memory\/long-term\/[^/]{1,200}$/.test(path)) return ["DELETE"];
   return [];
 }
 
@@ -91,4 +100,4 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
   }
 }
 
-export { proxy as GET, proxy as PUT, proxy as POST, proxy as DELETE };
+export { proxy as GET, proxy as PUT, proxy as POST, proxy as DELETE, proxy as PATCH };

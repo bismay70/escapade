@@ -138,13 +138,13 @@ export default function Navbar() {
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
 
-                            <NavItem label="Explore Extraordinary" className={navText} />
-                            <NavItem label="Offers" className={navText} />
-                            <NavItem label="Support" className={navText} />
-                            <NavItem label="Review & Ratings" className={navText} />
-                            <NavItem label="About Us" className={navText} />
+                            <NavItem label="Explore Extraordinary" href="/destination_all" className={navText} />
+                            <NavItem label="Offers" href="/bookings" className={navText} />
+                            <NavItem label="Support" href="/about" className={navText} />
+                            <NavItem label="Review & Ratings" href="/about" className={navText} />
+                            <NavItem label="About Us" href="/about" className={navText} />
                             <NavigationMenuItem>
-                                <span className={cn("cursor-pointer text-sm font-gilroy-semibold transition-colors", navText)}>Blogs</span>
+                                <Link href="/blog" className={cn("cursor-pointer text-sm font-gilroy-semibold transition-colors", navText)}>Blogs</Link>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
@@ -157,6 +157,7 @@ export default function Navbar() {
                         <nav className="absolute right-0 top-12 w-56 rounded-xl bg-white p-4 shadow-xl flex flex-col gap-4 text-sm text-[#10213E]" aria-label="Mobile navigation">
                             <Link href="/planner">AI travel planner</Link>
                             <Link href="/bookings">Offers & bookings</Link>
+                            <Link href="/dashboard">Agent dashboard</Link>
                             <Link href="/destination_all">Destinations</Link>
                             <Link href="/about">About us</Link>
                             <Link href="/blog">Blogs</Link>
@@ -182,13 +183,13 @@ export default function Navbar() {
     )
 }
 
-function NavItem({ label, className }: { label: string; className: string }) {
+function NavItem({ label, href, className }: { label: string; href: string; className: string }) {
     return (
         <NavigationMenuItem>
-            <div className={cn("flex cursor-pointer items-center gap-1 transition-colors group", className)}>
+            <Link href={href} className={cn("flex cursor-pointer items-center gap-1 transition-colors group", className)}>
                 <span className="text-sm font-gilroy-semibold">{label}</span>
                 <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
-            </div>
+            </Link>
         </NavigationMenuItem>
     )
 }

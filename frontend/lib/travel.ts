@@ -41,6 +41,67 @@ export type Capabilities = { ai: boolean; search: boolean; weather: boolean; fli
 export type AuthUser = { uid: string; email: string | null; name: string | null };
 export type AuthStatus = { authenticated: boolean; user: AuthUser | null };
 
+// ── New agentic types ──────────────────────────────────────────────────────────
+
+export type MemoryItem = {
+  key: string;
+  value: string;
+  kind: "fact" | "preference" | "decision" | "note";
+  source: "user" | "agent";
+  created_at?: string;
+};
+
+export type Approval = {
+  id: string;
+  session: string;
+  workflow_id: string | null;
+  agent: string;
+  kind: string;
+  prompt: string;
+  context: Record<string, unknown>;
+  status: "pending" | "decided";
+  decision: "approve" | "reject" | "edit" | null;
+  feedback: string | null;
+  created_at: string;
+  decided_at: string | null;
+};
+
+export type Workflow = {
+  id: string;
+  session: string;
+  name: string;
+  kind: string;
+  status: "active" | "paused" | "completed" | "cancelled";
+  payload: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AgentRole = {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  tools: string[];
+};
+
+export type TraceEvent = {
+  agent: string;
+  event_type: string;
+  payload: Record<string, unknown>;
+  created_at: string;
+  workflow_id?: string | null;
+};
+
+export type Metrics = {
+  total_events: number;
+  error_events: number;
+  pending_approvals: number;
+  active_workflows: number;
+  by_agent: { agent: string; count: number }[];
+  capabilities: Capabilities;
+};
+
 export async function travelApi<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`/api/${path}`, { ...options, credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json", ...options?.headers } });
   const data = await response.json().catch(() => ({}));

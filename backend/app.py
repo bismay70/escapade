@@ -20,13 +20,26 @@ from backend.agent import TravelAgent
 from backend import auth
 from backend.commerce import CommerceService, public_booking
 from backend.config import capabilities
-from backend.models import AuthSessionRequest, ChatRequest, CheckoutRequest, DraftRequest, Preferences, QuoteRequest, ReservationRequest
+from backend.memory import MemoryStore
+from backend.models import (
+    ApprovalDecisionRequest,
+    AuthSessionRequest,
+    ChatRequest,
+    CheckoutRequest,
+    DraftRequest,
+    MemoryItemRequest,
+    Preferences,
+    QuoteRequest,
+    ReservationRequest,
+    WorkflowRequest,
+)
+from backend.roles import list_roles
 from backend.storage import Store
 from backend.mcp_server import mcp
 from backend.travel_provider import CommerceError
 
 
-def create_app(store=None, agent=None, commerce=None):
+def create_app(store=None, agent=None, commerce=None, memory=None):
     mcp_app = mcp.streamable_http_app()
     @asynccontextmanager
     async def lifespan(app):
@@ -41,7 +54,8 @@ def create_app(store=None, agent=None, commerce=None):
             return JSONResponse({"error": "Invalid service credentials."}, status_code=401)
         return await call_next(request)
     app.state.store = store or Store()
-    app.state.agent = agent or TravelAgent()
+    app.state.memory = memory or MemoryStore()
+    app.state.agent = agent or TravelAgent(memory_store=app.state.memory)
     app.state.commerce = commerce or CommerceService(app.state.store)
     rate = defaultdict(deque)
     active = set()
@@ -125,10 +139,20 @@ def create_app(store=None, agent=None, commerce=None):
         bucket.append(now)
         active.add(sid)
         try:
-            response = await asyncio.wait_for(app.state.agent.run(body.message, app.state.store.profile(sid), app.state.store.history(sid)), timeout=110)
+            response = await asyncio.wait_for(
+                app.state.agent.run(
+                    body.message,
+                    app.state.store.profile(sid),
+                    app.state.store.history(sid),
+                    session_id=sid,
+                ),
+                timeout=110,
+            )
             app.state.store.append_turn(sid, body.message, response)
             return response
         except TimeoutError:
+            if hasattr(app.state, "memory"):
+                app.state.memory.log_event(sid, "coordinator", "timeout", {"message": body.message[:200]})
             raise HTTPException(504, "The planner timed out. Please try a shorter request.")
         finally:
             active.discard(sid)
@@ -183,6 +207,86 @@ def create_app(store=None, agent=None, commerce=None):
         if len(payload) > 1048576:
             raise HTTPException(413, "Webhook payload is too large.")
         return app.state.commerce.webhook(payload, request.headers.get("Stripe-Signature", ""))
+
+    # ── Long-term memory ─────────────────────────────────────────────────────
+
+    @app.get("/api/memory/long-term")
+    async def long_term_memory(q: str = "", sid=Depends(session)):
+        items = app.state.memory.recall(sid, query=q)
+        return {"items": items, "count": len(items)}
+
+    @app.post("/api/memory/long-term")
+    async def add_memory(body: MemoryItemRequest, sid=Depends(session)):
+        item = app.state.memory.remember(sid, body.key, body.value, body.kind, body.source)
+        return {"item": item}
+
+    @app.delete("/api/memory/long-term/{key}")
+    async def delete_memory(key: str, sid=Depends(session)):
+        deleted = app.state.memory.forget(sid, key)
+        if not deleted:
+            raise HTTPException(404, "Memory item not found.")
+        return {"deleted": True}
+
+    # ── Human-in-the-loop approvals ──────────────────────────────────────────
+
+    @app.get("/api/approvals")
+    async def get_approvals(all: bool = False, sid=Depends(session)):
+        if all:
+            items = app.state.memory.all_approvals(sid)
+        else:
+            items = app.state.memory.pending_approvals(sid)
+        return {"approvals": items, "pending": sum(1 for a in items if a["status"] == "pending")}
+
+    @app.post("/api/approvals/{approval_id}/decide")
+    async def decide_approval(approval_id: str, body: ApprovalDecisionRequest, sid=Depends(session)):
+        result = app.state.memory.decide_approval(sid, approval_id, body.decision, body.feedback)
+        if not result:
+            raise HTTPException(404, "Approval request not found or already decided.")
+        app.state.memory.log_event(sid, "user", "approval_decided", {"approval_id": approval_id, "decision": body.decision})
+        return {"approval": result}
+
+    # ── Workflows ────────────────────────────────────────────────────────────
+
+    @app.get("/api/workflows")
+    async def list_workflows(sid=Depends(session)):
+        return {"workflows": app.state.memory.list_workflows(sid)}
+
+    @app.post("/api/workflows")
+    async def create_workflow(body: WorkflowRequest, sid=Depends(session)):
+        from uuid import uuid4
+        wf_id = str(uuid4())
+        wf = app.state.memory.save_workflow(sid, wf_id, body.name, body.kind, body.payload)
+        app.state.memory.log_event(sid, "coordinator", "workflow_created", {"workflow_id": wf_id, "kind": body.kind, "name": body.name})
+        return {"workflow": wf}
+
+    @app.patch("/api/workflows/{workflow_id}")
+    async def update_workflow(workflow_id: str, status: str, sid=Depends(session)):
+        allowed_statuses = {"active", "paused", "completed", "cancelled"}
+        if status not in allowed_statuses:
+            raise HTTPException(422, f"Status must be one of: {', '.join(sorted(allowed_statuses))}")
+        wf = app.state.memory.update_workflow_status(sid, workflow_id, status)
+        if not wf:
+            raise HTTPException(404, "Workflow not found.")
+        return {"workflow": wf}
+
+    # ── Agent roles ──────────────────────────────────────────────────────────
+
+    @app.get("/api/agents/roles")
+    async def agent_roles(checked=Depends(service)):
+        return {"roles": list_roles()}
+
+    # ── Observability: trace and metrics ─────────────────────────────────────
+
+    @app.get("/api/trace")
+    async def trace(workflow_id: str | None = None, limit: int = 100, sid=Depends(session)):
+        limit = max(1, min(limit, 500))
+        events = app.state.memory.events(sid, workflow_id=workflow_id, limit=limit)
+        return {"events": events, "count": len(events)}
+
+    @app.get("/api/metrics")
+    async def metrics(sid=Depends(session)):
+        m = app.state.memory.metrics(sid)
+        return {**m, "capabilities": capabilities()}
 
     return app
 

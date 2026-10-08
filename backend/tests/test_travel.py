@@ -17,7 +17,9 @@ from backend.storage import Store
 def client(tmp_path, monkeypatch):
     for name in ("GROQ_API_KEY", "OPENAI_API_KEY", "TAVILY_API_KEY", "TAVILY_MCP_URL", "OPENWEATHER_API_KEY", "AVIATIONSTACK_API_KEY", "BACKEND_SERVICE_KEY"):
         monkeypatch.delenv(name, raising=False)
-    app = create_app(Store(tmp_path / "test.sqlite3"), TravelAgent())
+    from backend.memory import MemoryStore
+    store = Store(tmp_path / "test.sqlite3")
+    app = create_app(Store(tmp_path / "test.sqlite3"), TravelAgent(), memory=MemoryStore(tmp_path / "test.sqlite3"))
     return TestClient(app)
 
 
@@ -191,7 +193,7 @@ def test_mcp_http_tool_discovery_and_weather(client):
         initialized = client.post("/mcp/", headers=accept, json={"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "vacanes-test", "version": "1"}}})
         assert initialized.status_code == 200
         tools = client.post("/mcp/", headers=accept, json={"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}}).json()
-        assert {tool["name"] for tool in tools["result"]["tools"]} == {"search_hotels", "search_transport", "current_weather"}
+        assert {tool["name"] for tool in tools["result"]["tools"]} == {"search_hotels", "search_transport", "current_weather", "research_activities"}
         weather = client.post("/mcp/", headers=accept, json={"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "current_weather", "arguments": {"destination": "Goa"}}})
         assert weather.status_code == 200
         assert "unconfigured" in weather.text

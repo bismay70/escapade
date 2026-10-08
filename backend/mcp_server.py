@@ -32,5 +32,12 @@ async def current_weather(destination: str) -> dict:
     return await tools["weather"].ainvoke({"destination": destination})
 
 
+@mcp.tool()
+async def research_activities(destination: str, preferences: dict) -> dict:
+    """Research activities, dining and attractions aligned with interests and dietary preferences."""
+    p = Preferences.model_validate(preferences)
+    return await tools["activities"].ainvoke({"destination": destination, "preferences": p.model_dump(mode="json")})
+
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")

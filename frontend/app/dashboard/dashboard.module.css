@@ -1,0 +1,461 @@
+/* Agent Dashboard */
+.workspace {
+  min-height: 100svh;
+  background: #f8fafc;
+  font-family: "Gilroy", Arial, sans-serif;
+  color: #10213e;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  height: 3.5rem;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #10213e;
+  text-decoration: none;
+}
+
+.brand span {
+  font-weight: 400;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.topLinks {
+  display: flex;
+  gap: 1rem;
+}
+
+.topLinks a {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: #475569;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.topLinks a:hover { color: #10213e; }
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.heading {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.subheading {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+/* Stats grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) { .statsGrid { grid-template-columns: repeat(4, 1fr); } }
+
+.stat {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.statHint {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 0.25rem;
+}
+
+/* Section layout */
+.sections {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) { .sections { grid-template-columns: 1fr 1fr; } }
+
+.panel {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.panelTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.panelAction {
+  font-size: 0.8rem;
+  color: #1d4ed8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.4rem;
+  transition: background 0.15s;
+}
+
+.panelAction:hover { background: #eff6ff; }
+
+.panelBody {
+  padding: 1rem 1.25rem;
+}
+
+.empty {
+  color: #94a3b8;
+  font-size: 0.88rem;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+/* Approval items */
+.approvalItem {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.6rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.approvalItem:last-child { margin-bottom: 0; }
+
+.approvalMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.approvalAgent {
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.82rem;
+}
+
+.approvalPrompt {
+  font-size: 0.9rem;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.approvalActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.approveBtn {
+  background: #176b5b;
+  color: #fff;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.approveBtn:hover { background: #105344; }
+.approveBtn:disabled { opacity: 0.5; cursor: default; }
+
+.rejectBtn {
+  background: #fff;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.rejectBtn:hover { background: #fef2f2; }
+.rejectBtn:disabled { opacity: 0.5; cursor: default; }
+
+/* Memory items */
+.memoryItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.memoryItem:last-child { border-bottom: none; }
+
+.memoryKey {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  flex: 0 0 auto;
+  min-width: 6rem;
+  max-width: 10rem;
+  word-break: break-word;
+}
+
+.memoryValue {
+  font-size: 0.88rem;
+  color: #475569;
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.memoryKind {
+  font-size: 0.75rem;
+  background: #f1f5f9;
+  color: #475569;
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.45rem;
+  flex: 0 0 auto;
+}
+
+.memoryDelete {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 0.3rem;
+  flex: 0 0 auto;
+  transition: color 0.15s;
+}
+
+.memoryDelete:hover { color: #dc2626; }
+
+/* Workflows */
+.workflowItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 0.75rem;
+}
+
+.workflowItem:last-child { border-bottom: none; }
+
+.workflowName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.workflowKind {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.statusBadge {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+
+.statusActive { background: #dcfce7; color: #166534; }
+.statusPaused { background: #fef9c3; color: #854d0e; }
+.statusCompleted { background: #e0f2fe; color: #075985; }
+.statusCancelled { background: #fee2e2; color: #991b1b; }
+
+/* Roles */
+.roleGrid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 480px) { .roleGrid { grid-template-columns: 1fr; } }
+
+.roleCard {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.6rem;
+  padding: 0.875rem;
+}
+
+.roleName {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  color: #1e293b;
+}
+
+.roleDesc {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.roleTools {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.toolBadge {
+  font-size: 0.72rem;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.4rem;
+}
+
+/* Trace events */
+.traceList {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.traceEvent {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.82rem;
+}
+
+.traceEvent:last-child { border-bottom: none; }
+
+.traceAgent {
+  font-weight: 600;
+  color: #334155;
+}
+
+.traceType {
+  color: #64748b;
+  margin: 0 0.3rem;
+}
+
+.traceTime {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+/* Add memory form */
+.addMemoryForm {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) { .addMemoryForm { grid-template-columns: 1fr; } }
+
+.addMemoryForm input, .addMemoryForm select {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.85rem;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.addBtn {
+  background: #10213e;
+  color: #fff;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.42rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.addBtn:hover { background: #1e3a5f; }
+.addBtn:disabled { opacity: 0.5; cursor: default; }
+
+/* Add workflow form */
+.addWorkflowForm {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 2fr 1fr auto;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) { .addWorkflowForm { grid-template-columns: 1fr; } }
+
+.addWorkflowForm input, .addWorkflowForm select {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.85rem;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Error */
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+}
+
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

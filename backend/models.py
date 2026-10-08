@@ -112,3 +112,26 @@ class ReservationRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     confirmed: Literal[True]
     travelers: list[Traveler] = Field(min_length=1, max_length=9)
+
+
+# ── Memory & orchestration models ──────────────────────────────────────────────
+
+class MemoryItemRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    key: str = Field(min_length=1, max_length=200)
+    value: str = Field(min_length=1, max_length=2000)
+    kind: Literal["fact", "preference", "decision", "note"] = "fact"
+    source: Literal["user", "agent"] = "user"
+
+
+class ApprovalDecisionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    decision: Literal["approve", "reject", "edit"]
+    feedback: str = Field(default="", max_length=2000)
+
+
+class WorkflowRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    name: str = Field(min_length=1, max_length=200)
+    kind: Literal["travel_plan", "hotel_search", "flight_search", "destination_compare", "custom"] = "travel_plan"
+    payload: dict = Field(default_factory=dict)
