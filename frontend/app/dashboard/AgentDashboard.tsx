@@ -126,6 +126,7 @@ export default function AgentDashboard() {
 
   return (
     <main className={styles.workspace}>
+      <nav style={{padding:"18px 32px",display:"flex",gap:24}} aria-label="Platform navigation"><Link href="/studio">Workflow studio</Link><Link href="/workflows">Travel research</Link></nav>
       <header className={styles.topbar}>
         <Link href="/" className={styles.brand}>
           <Compass size={22} /> Vacanes <span>/ agent dashboard</span>

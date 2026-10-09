@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 
 const allowed: Record<string, string[]> = {
   "profile": ["GET", "PUT"],
+  "research-runs": ["GET", "POST"],
   "memory": ["GET", "DELETE"],
   "memory/long-term": ["GET", "POST"],
   "ai/agent": ["POST"],
@@ -25,6 +26,14 @@ const allowed: Record<string, string[]> = {
 };
 
 function methodsFor(path: string): string[] {
+  if (/^research-runs\/[a-zA-Z0-9_-]{1,96}$/.test(path)) return ["GET"];
+  if (/^research-runs\/[a-zA-Z0-9_-]{1,96}\/(review|retry)$/.test(path)) return ["POST"];
+  if (path === "studio") return ["GET"];
+  if (/^studio\/(definitions|runs|schedules|teams)$/.test(path)) return ["POST"];
+  if (/^studio\/runs\/[a-zA-Z0-9_-]{1,96}$/.test(path)) return ["POST"];
+  if (/^studio\/schedules\/[a-zA-Z0-9_-]{1,96}$/.test(path)) return ["DELETE"];
+  if (/^studio\/teams\/[a-zA-Z0-9_-]{1,96}\/members$/.test(path)) return ["POST"];
+  if (/^studio\/teams\/[a-zA-Z0-9_-]{1,96}\/members\/[^/]{1,128}$/.test(path)) return ["DELETE"];
   if (allowed[path]) return allowed[path];
   if (/^bookings\/[a-zA-Z0-9_-]{1,96}$/.test(path)) return ["GET"];
   if (/^bookings\/[a-zA-Z0-9_-]{1,96}\/(checkout|reserve)$/.test(path)) return ["POST"];
@@ -61,7 +70,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
   if (Number.isFinite(declaredLength) && declaredLength > limit) {
     return NextResponse.json({ error: "Request is too large." }, { status: 413 });
   }
-  const body = ["POST", "PUT"].includes(request.method) ? Buffer.from(await request.arrayBuffer()) : undefined;
+  const body = ["POST", "PUT", "PATCH"].includes(request.method) ? Buffer.from(await request.arrayBuffer()) : undefined;
   if (body && body.byteLength > limit) {
     return NextResponse.json({ error: "Request is too large." }, { status: 413 });
   }
@@ -77,7 +86,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
       headers["X-Session-Id"] = sid;
       headers["X-Auth-Session"] = request.cookies.get("vacanes_auth")?.value ?? "";
     }
-    const upstream = await fetch(`${base.replace(/\/$/, "")}/api/${path}`, {
+    const upstream = await fetch(`${base.replace(/\/$/, "")}/api/${path}${request.nextUrl.search}`, {
       method: request.method,
       headers,
       body,

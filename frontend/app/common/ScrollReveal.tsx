@@ -29,6 +29,10 @@ export default function ScrollReveal({ children, delay = 0, variant = "rise" }: 
           x: horizontal ? (index % 2 ? 36 : -36) : 0,
           scale: media ? 1.07 : variant === "scale" && kind === "card" ? .94 : 1,
           rotate: kind === "gallery-card" ? (index % 2 ? 5 : -5) : 0,
+          rotationX: heading ? 0 : 16,
+          rotationY: heading ? 0 : (index % 2 ? 9 : -9),
+          z: heading ? 0 : -90,
+          transformPerspective: 1100,
         };
         // Only hide content below the initial viewport, keeping server content and
         // already-visible elements stable on refresh and client navigation.
@@ -36,7 +40,7 @@ export default function ScrollReveal({ children, delay = 0, variant = "rise" }: 
         const scrollTrigger = { trigger: element, start: "top 94%", once: true, invalidateOnRefresh: true };
         if (belowFold) {
           gsap.fromTo(element, start, {
-            opacity: 1, x: 0, y: 0, scale: 1, rotate: 0,
+            opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, rotationX: 0, rotationY: 0, z: 0,
             duration: heading ? .85 : media ? 1.2 : 1,
             delay: delay + (heading ? 0 : Math.min(index % 5, 4) * .095),
             ease: "power3.out", scrollTrigger,
@@ -44,7 +48,7 @@ export default function ScrollReveal({ children, delay = 0, variant = "rise" }: 
           });
         } else {
           gsap.fromTo(element, { ...start, opacity: 1, y: 24 }, {
-            opacity: 1, x: 0, y: 0, scale: 1, rotate: 0,
+            opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, rotationX: 0, rotationY: 0, z: 0,
             duration: .85, delay: Math.min(index, 4) * .06,
             ease: "power3.out", clearProps: "transform,opacity",
           });

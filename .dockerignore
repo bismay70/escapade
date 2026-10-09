@@ -1,0 +1,14 @@
+.git
+**/node_modules
+**/.next
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.env
+**/.env.*
+**/.secrets
+**/secrets
+**/credentials
+backend/data
+backups
+*.log

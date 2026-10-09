@@ -1,0 +1,37 @@
+.journey { height: 240vh; position: relative; background: #eef2f5; color: #10213e; }
+.stage { position: sticky; top: 0; height: 100dvh; min-height: 680px; overflow: hidden; max-width: 1600px; margin: auto; }
+.heading { position: absolute; top: 10%; left: 7%; z-index: 2; pointer-events: none; }
+.eyebrow { font: 600 12px/1.5 Arial,sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #49617a; }
+.heading h2 { font-size: clamp(38px,4.8vw,76px); line-height: 1.06; letter-spacing: -.04em; margin-top: 20px; }
+.heading em { font-weight: 400; }
+.globe { position: absolute; width: 68%; height: 88%; left: -9%; bottom: -19%; }
+.globe canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.fallback { position: absolute; width: 60%; aspect-ratio: 1; top: 20%; left: 20%; border-radius: 50%; background: #264662 url('/home/earth/earth.jpg') 48% 50% / auto 100%; box-shadow: inset -40px -15px 70px #071b3abb, 0 30px 80px #243f5f20; }
+.globe[data-ready=true] .fallback { display: none; }
+.stories { position: absolute; right: 7%; top: 17%; width: 34%; height: 66%; }
+.story { position: absolute; inset: 0; opacity: 0; transform: translateY(35px) rotate(3deg); transition: opacity .6s, transform .8s cubic-bezier(.2,.7,.2,1); visibility: hidden; }
+.journey[data-stop="0"] .story[data-journey-stop="0"], .journey[data-stop="1"] .story[data-journey-stop="1"], .journey[data-stop="2"] .story[data-journey-stop="2"] { opacity: 1; transform: translateY(0) rotate(0); visibility: visible; }
+.photo { height: 55%; background-size: cover; background-position: center; border-radius: 160px 160px 12px 12px; box-shadow: 0 24px 50px #18355018; }
+.copy { padding: 26px 2px; }
+.copy span { color: #52657b; font: 12px Arial,sans-serif; }
+.copy h3 { font-size: clamp(25px,2.4vw,38px); letter-spacing: -.03em; margin: 10px 0; }
+.copy p { font: 16px/1.65 Arial,sans-serif; color: #455970; max-width: 360px; }
+.link { position: absolute; bottom: 7%; right: 7%; display: flex; align-items: center; gap: 28px; padding: 14px 0; border-bottom: 1px solid #10213e; font: 600 15px Arial,sans-serif; }
+.link:hover { color: #1d4ed8; }
+.link:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 6px; }
+.journey[data-motion-enabled=false] { height: auto; }
+.journey[data-motion-enabled=false] .stage { position: relative; }
+.journey[data-motion-enabled=false] .story { transition: none; }
+@media(max-width: 767px) {
+ .journey { height: 200vh; }
+ .stage { min-height: 740px; }
+ .heading { left: 6%; top: 7%; }
+ .heading h2 { font-size: 43px; }
+ .globe { width: 85%; height: 48%; left: -29%; bottom: -3%; }
+ .stories { right: 6%; top: 33%; width: 65%; height: 53%; }
+ .photo { height: 48%; border-radius: 90px 90px 10px 10px; }
+ .copy { padding: 17px 0; }
+ .copy h3 { font-size: 27px; }
+ .copy p { font-size: 14px; }
+ .link { bottom: 4%; right: 6%; }
+}

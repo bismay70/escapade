@@ -9,7 +9,7 @@ import AgentWidget from "./AgentWidget";
 export default function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isLoginPage = pathname === "/login";
-  const isPlannerPage = pathname === "/planner" || pathname === "/bookings" || pathname === "/dashboard";
+  const isPlannerPage = pathname === "/planner" || pathname === "/bookings" || pathname === "/dashboard" || pathname === "/workflows" || pathname === "/studio";
 
   return (
     <>

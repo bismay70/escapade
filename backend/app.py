@@ -37,6 +37,8 @@ from backend.roles import list_roles
 from backend.storage import Store
 from backend.mcp_server import mcp
 from backend.travel_provider import CommerceError
+from backend.studio import register_studio
+from backend.workflows import Workflows, RunRequest, ReviewRequest, public_run
 
 
 def create_app(store=None, agent=None, commerce=None, memory=None):
@@ -44,7 +46,14 @@ def create_app(store=None, agent=None, commerce=None, memory=None):
     @asynccontextmanager
     async def lifespan(app):
         async with mcp.session_manager.run():
-            yield
+            worker = asyncio.create_task(app.state.studio.worker()) if os.getenv("STUDIO_EMBEDDED_WORKER", "1") == "1" else None
+            try:
+                yield
+            finally:
+                if worker:
+                    worker.cancel()
+                    await asyncio.gather(worker, return_exceptions=True)
+                await app.state.workflows.close()
     app = FastAPI(title="Vacanes travel agents", version="2.0.0", lifespan=lifespan)
     app.mount("/mcp", mcp_app)
     @app.middleware("http")
@@ -54,9 +63,10 @@ def create_app(store=None, agent=None, commerce=None, memory=None):
             return JSONResponse({"error": "Invalid service credentials."}, status_code=401)
         return await call_next(request)
     app.state.store = store or Store()
-    app.state.memory = memory or MemoryStore()
+    app.state.memory = memory or MemoryStore(app.state.store.path)
     app.state.agent = agent or TravelAgent(memory_store=app.state.memory)
     app.state.commerce = commerce or CommerceService(app.state.store)
+    app.state.workflows = Workflows(app.state.store, app.state.agent)
     rate = defaultdict(deque)
     active = set()
 
@@ -109,11 +119,37 @@ def create_app(store=None, agent=None, commerce=None, memory=None):
     @app.put("/api/profile")
     async def save_profile(p: Preferences, sid=Depends(session)):
         app.state.store.save_profile(sid, p)
+        if hasattr(app.state.studio.store, "sync_profile"):
+            app.state.studio.store.sync_profile(sid)
         return {"preferences": p.model_dump(mode="json")}
 
     @app.get("/api/memory")
     async def memory(sid=Depends(session)):
         return {"messages": app.state.store.history(sid)}
+
+    @app.get("/api/research-runs")
+    async def workflows(sid=Depends(session)):
+        return {"runs": [public_run(r) for r in app.state.workflows.list(sid)]}
+
+    @app.post("/api/research-runs")
+    async def launch_workflow(body: RunRequest, sid=Depends(session)):
+        run = app.state.workflows.create(sid, body)
+        app.state.workflows.start(sid, run["id"])
+        return public_run(run)
+
+    @app.get("/api/research-runs/{run_id}")
+    async def workflow(run_id: str, sid=Depends(session)):
+        return public_run(app.state.workflows.get(sid, run_id))
+
+    @app.post("/api/research-runs/{run_id}/review")
+    async def review_workflow(run_id: str, body: ReviewRequest, sid=Depends(session)):
+        return public_run(app.state.workflows.review(sid, run_id, body.decision))
+
+    @app.post("/api/research-runs/{run_id}/retry")
+    async def retry_workflow(run_id: str, sid=Depends(session)):
+        run = app.state.workflows.retry(sid, run_id)
+        app.state.workflows.start(sid, run["id"])
+        return public_run(run)
 
     @app.delete("/api/memory")
     async def clear(sid=Depends(session)):
@@ -288,6 +324,7 @@ def create_app(store=None, agent=None, commerce=None, memory=None):
         m = app.state.memory.metrics(sid)
         return {**m, "capabilities": capabilities()}
 
+    register_studio(app, session)
     return app
 
 

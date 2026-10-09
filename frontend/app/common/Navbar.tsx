@@ -155,6 +155,7 @@ export default function Navbar() {
                     <details className="xl:hidden relative">
                         <summary className="list-none cursor-pointer rounded-full bg-white/90 p-2 text-[#10213E]" aria-label="Open navigation"><Menu size={20} /></summary>
                         <nav className="absolute right-0 top-12 w-56 rounded-xl bg-white p-4 shadow-xl flex flex-col gap-4 text-sm text-[#10213E]" aria-label="Mobile navigation">
+                            <Link href="/dashboard">Travel workflows</Link>
                             <Link href="/planner">AI travel planner</Link>
                             <Link href="/bookings">Offers & bookings</Link>
                             <Link href="/dashboard">Agent dashboard</Link>

@@ -9,3 +9,7 @@ mcp>=1.20,<2
 pytest>=8,<10
 stripe>=12,<16
 firebase-admin>=6,<8
+
+opentelemetry-sdk>=1.30,<2
+opentelemetry-exporter-otlp-proto-http>=1.30,<2
+psycopg[binary]>=3.2,<4
