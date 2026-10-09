@@ -29,10 +29,10 @@ export default function Hero() {
 
   return <section ref={ref} className="home-hero relative flex min-h-[100dvh] items-center overflow-clip px-4 sm:px-8 py-20">
     <motion.div aria-hidden="true" className="home-hero-background pointer-events-none absolute -inset-y-16 inset-x-0" style={{ backgroundImage: "url('/home/hero-bg.png')", backgroundSize: "cover", backgroundPosition: "center", y: enabled ? backgroundY : 0, scale: enabled ? backgroundScale : 1 }} />
-    <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-transparent" />
+    <div className="pointer-events-none absolute inset-0 bg-[#174353]/65" />
     <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-[35vh] bg-gradient-to-t from-[#F2F4F6] via-[#F2F4F6]/80 to-transparent" />
     <div className="relative z-20 mx-auto flex w-full max-w-7xl flex-col items-center">
-      <motion.div className="text-center" style={{ y: enabled ? titleY : 0, opacity: enabled ? titleOpacity : 1 }}>
+      <motion.div className="text-center [text-shadow:0_2px_24px_#102f49]" style={{ y: enabled ? titleY : 0, opacity: enabled ? titleOpacity : 1 }}>
         <p data-hero-eyebrow className="mb-4 text-lg sm:text-xl font-gilroy-semibold text-white">One Adventure At A Time</p>
         <h1 aria-label="Discover" className="home-hero-title text-[clamp(3.5rem,11vw,9rem)] font-gilroy-bold uppercase text-white lg:tracking-[-6px] leading-[1.1]">
           {"Discover".split("").map((letter, index) => <span key={index} aria-hidden="true" className="inline-block overflow-hidden align-bottom pb-2"><span data-hero-letter className="inline-block origin-bottom-left">{letter}</span></span>)}

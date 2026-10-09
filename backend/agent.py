@@ -28,6 +28,7 @@ class TravelState(TypedDict, total=False):
     mode: str
     trace: Annotated[list, operator.add]
     notices: Annotated[list, operator.add]
+    allowed_tools: list | None
     long_term_memory: list
 
 
@@ -147,6 +148,8 @@ class TravelAgent:
         async def run(state):
             task = state["intent"]["task"]
             should_run = task == "plan" or task == name or (name == "activities" and task == "plan")
+            if state.get("allowed_tools") is not None and name not in state["allowed_tools"]:
+                should_run = False
             if not should_run:
                 return {name: {"status": "skipped"}, "trace": [{"agent": name, "status": "skipped", "detail": "Not needed for this question."}]}
             args = {"destination": state["intent"]["destination"]}
@@ -257,23 +260,19 @@ class TravelAgent:
             notices.append("Local sample mode: add a Groq or OpenAI key for open-ended conversation and multilingual answers.")
         return {"answer": answer, "recommendations": recs, "mode": mode, "notices": notices, "trace": [{"agent": "final", "status": "complete", "detail": "Returned preference-aligned guidance with data limitations."}]}
 
-    async def run(self, message, preferences, history, session_id=None, workflow_id=None):
-        # Fetch long-term memory if the memory store is available
-        long_term = []
+    async def run(self, message, preferences, history, session_id=None, workflow_id=None, on_progress=None, allowed_tools=None):
+        long_term = self.memory.recall(session_id, query=message, limit=10) if self.memory and session_id else []
         if self.memory and session_id:
-            long_term = self.memory.recall(session_id, query=message, limit=10)
+            self.memory.log_event(session_id, "coordinator", "run_start", {}, workflow_id=workflow_id)
+        initial = {"message": message, "history": history, "preferences": preferences.model_dump(mode="json"), "trace": [], "notices": [], "long_term_memory": long_term, "allowed_tools": allowed_tools}
+        if on_progress is None:
+            state = await self.graph.ainvoke(initial)
+        else:
+            state = initial
+            async for snapshot in self.graph.astream(initial, stream_mode="values"):
+                state = snapshot
+                on_progress(state.get("trace", []))
 
-        if self.memory and session_id:
-            self.memory.log_event(session_id, "coordinator", "run_start", {"message": message[:200]}, workflow_id=workflow_id)
-
-        state = await self.graph.ainvoke({
-            "message": message,
-            "history": history,
-            "preferences": preferences.model_dump(mode="json"),
-            "trace": [],
-            "notices": [],
-            "long_term_memory": long_term,
-        })
         sources = []
         seen = set()
         for kind in ("hotels", "flights", "activities"):

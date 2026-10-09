@@ -19,6 +19,7 @@ from contextlib import contextmanager
 from pathlib import Path
 
 from backend.config import database_path
+from backend.vector_memory import embed, similarity
 
 
 class MemoryStore:
@@ -40,6 +41,7 @@ class MemoryStore:
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
                 );
+                CREATE TABLE IF NOT EXISTS memory_vectors(session TEXT,key TEXT,vector TEXT,PRIMARY KEY(session,key));
                 CREATE INDEX IF NOT EXISTS ltm_session ON long_term_memory(session);
                 CREATE INDEX IF NOT EXISTS ltm_session_key ON long_term_memory(session, key);
                 CREATE TABLE IF NOT EXISTS agent_events(
@@ -97,49 +99,39 @@ class MemoryStore:
         """Upsert a memory item for this session."""
         key = key.strip()[:200]
         value = value.strip()[:2000]
+        if not key or not value:
+            raise ValueError("Memory key and value cannot be blank.")
         with self._connect() as conn:
-            conn.execute("""
-                INSERT INTO long_term_memory(session, kind, key, value, source)
-                VALUES (?, ?, ?, ?, ?)
-                ON CONFLICT DO NOTHING
-            """, (session, kind, key, value, source))
-            row = conn.execute(
-                "SELECT id, key, value, kind, source, created_at FROM long_term_memory WHERE session=? AND key=? ORDER BY id DESC LIMIT 1",
-                (session, key)
-            ).fetchone()
-            if row:
-                conn.execute(
-                    "UPDATE long_term_memory SET value=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
-                    (value, row["id"])
-                )
+            conn.execute("BEGIN IMMEDIATE")
+            conn.execute("DELETE FROM long_term_memory WHERE session=? AND key=?", (session,key))
+            conn.execute("INSERT INTO long_term_memory(session,kind,key,value,source) VALUES(?,?,?,?,?)", (session,kind,key,value,source))
+            conn.execute("INSERT INTO memory_vectors VALUES(?,?,?) ON CONFLICT(session,key) DO UPDATE SET vector=excluded.vector",(session,key,json.dumps(embed(key+' '+value))))
         return {"key": key, "value": value, "kind": kind, "source": source}
 
     def recall(self, session: str, query: str = "", limit: int = 20) -> list[dict]:
-        """Retrieve memory items, optionally filtered by keyword search."""
+        """Vector-ranked lexical retrieval, scoped to identity; not neural semantics."""
+        limit=max(1,min(limit,100))
         with self._connect() as conn:
-            if query.strip():
-                # Simple keyword search across key and value
-                words = re.sub(r"[^\w\s]", " ", query.lower()).split()
-                clauses = " AND ".join("(LOWER(key) LIKE ? OR LOWER(value) LIKE ?)" for _ in words)
-                params = [item for w in words for item in (f"%{w}%", f"%{w}%")]
-                rows = conn.execute(
-                    f"SELECT key, value, kind, source, created_at FROM long_term_memory WHERE session=? AND {clauses} ORDER BY id DESC LIMIT ?",
-                    [session, *params, limit]
-                ).fetchall()
-            else:
-                rows = conn.execute(
-                    "SELECT key, value, kind, source, created_at FROM long_term_memory WHERE session=? ORDER BY id DESC LIMIT ?",
-                    (session, limit)
-                ).fetchall()
-        return [dict(row) for row in rows]
+            rows=conn.execute("SELECT m.key,m.value,m.kind,m.source,m.created_at,v.vector FROM long_term_memory m LEFT JOIN memory_vectors v ON m.session=v.session AND m.key=v.key WHERE m.session=? ORDER BY m.id DESC LIMIT 1000",(session,)).fetchall()
+        items=[dict(row) for row in rows]
+        if re.search(r'\w',query):
+            target=embed(query)
+            for item in items:
+                item['score']=similarity(target,json.loads(item['vector']) if item['vector'] else embed(item['key']+' '+item['value']))
+            items=sorted((item for item in items if item['score']>.08),key=lambda item:item['score'],reverse=True)
+        elif query.strip():
+            return []
+        return [{k:v for k,v in item.items() if k!='vector'} for item in items[:limit]]
 
     def forget(self, session: str, key: str) -> bool:
         with self._connect() as conn:
+            conn.execute("DELETE FROM memory_vectors WHERE session=? AND key=?", (session,key))
             cursor = conn.execute("DELETE FROM long_term_memory WHERE session=? AND key=?", (session, key))
         return cursor.rowcount > 0
 
     def clear_memory(self, session: str):
         with self._connect() as conn:
+            conn.execute("DELETE FROM memory_vectors WHERE session=?", (session,))
             conn.execute("DELETE FROM long_term_memory WHERE session=?", (session,))
 
     # ──────────────────────────────────────── observability ────────────

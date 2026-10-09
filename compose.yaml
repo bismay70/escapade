@@ -1,0 +1,53 @@
+# Local deployment. Supply PG_PASSWORD and backend/.env; no secrets are baked in.
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: vacanes
+      POSTGRES_USER: vacanes
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?Set PG_PASSWORD}
+    volumes:
+      - studio-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vacanes -d vacanes"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: backend/.env
+    environment:
+      STUDIO_EMBEDDED_WORKER: "0"
+      STUDIO_DATABASE_URL: postgresql://vacanes:${PG_PASSWORD}@postgres:5432/vacanes
+      DATABASE_PATH: /app/backend/data/vacanes.sqlite3
+      FIREBASE_SERVICE_ACCOUNT_PATH: /run/secrets/firebase.json
+    ports: ["127.0.0.1:8000:8000"]
+    volumes:
+      - app-data:/app/backend/data
+    secrets: [firebase]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+  worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["python", "-m", "backend.worker"]
+    env_file: backend/.env
+    environment:
+      STUDIO_DATABASE_URL: postgresql://vacanes:${PG_PASSWORD}@postgres:5432/vacanes
+      DATABASE_PATH: /tmp/worker-local.sqlite3
+    depends_on:
+      api:
+        condition: service_started
+    restart: unless-stopped
+secrets:
+  firebase:
+    file: ${FIREBASE_JSON_PATH:?Set FIREBASE_JSON_PATH to the existing private JSON}
+volumes:
+  studio-db:
+  app-data:

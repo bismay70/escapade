@@ -639,3 +639,6 @@ npm run build
 ```
 
 Tests cover persistence/session isolation, verified identity, preference-aware plans, follow-up memory, per-message overrides, validation, provider outages, mocked AI/weather/inventory responses, quote ownership/expiry, duplicate commands, reservation uncertainty, tamper-resistant amounts, and signed payment webhook replay. Provider-backed sign-in, search, reservations and test payments still require validation with your credentials. No real reservation or charge has been made.
+# Workflow dashboard and 3D homepage
+
+Open `/dashboard` to start travel research, watch recorded specialist progress, and approve or reject a saved plan. Homepage `/` includes a scroll-driven Three.js globe journey. See [implementation scope](docs/task-implementation.md) for API routes, recovery behavior, asset attribution, and the remaining upstream roadmap.

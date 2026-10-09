@@ -18,6 +18,9 @@ import Testimonials from './components/Testimonials'
 import FAQ from '../common/FAQ'
 import ScrollReveal from '../common/ScrollReveal'
 import HomeMotion from '../common/HomeMotion'
+import JourneyScene from './components/JourneyScene'
+import DestinationDeck from './components/DestinationDeck'
+import TravelWorld from './components/TravelWorld'
 
 
 const slides = [
@@ -47,10 +50,13 @@ const HomePage = () => {
         <HomeMotion>
         <section>
             <Hero />
+            <JourneyScene />
             <ScrollReveal variant="slide"><ComfortZone /></ScrollReveal>
             <ScrollReveal><ExclusiveDeals /></ScrollReveal>
             <ScrollReveal><HeroBanner /></ScrollReveal>
+            <TravelWorld />
             <ScrollReveal variant="scale"><ExploreThemes /></ScrollReveal>
+            <DestinationDeck />
             <ScrollReveal>
             <HeroSlider
                 heading="Experience the Extraordinary"

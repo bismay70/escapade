@@ -117,7 +117,7 @@ class ReservationRequest(BaseModel):
 # ── Memory & orchestration models ──────────────────────────────────────────────
 
 class MemoryItemRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
     key: str = Field(min_length=1, max_length=200)
     value: str = Field(min_length=1, max_length=2000)
     kind: Literal["fact", "preference", "decision", "note"] = "fact"

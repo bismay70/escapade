@@ -1,0 +1,25 @@
+.world { position:relative;height:300vh;background:#dfedf0;color:#173d45; }
+.stage { position:sticky;top:0;height:100dvh;min-height:680px;overflow:hidden; }
+.canvas { position:absolute;inset:0;pointer-events:none; }
+.canvas canvas { width:100%;height:100%;display:block; }
+.fallback { position:absolute;inset:0;background:url('/home/hero-bg.png') center/cover;opacity:.35; }
+.canvas[data-ready=true] .fallback { display:none; }
+.heading { position:absolute;top:10%;left:7%;pointer-events:none; }
+.heading p { font:600 11px Arial,sans-serif;letter-spacing:.2em; }
+.heading h2 { font-size:clamp(36px,4.5vw,70px);line-height:1.05;letter-spacing:-.035em;margin-top:20px; }
+.heading em { font-weight:400; }
+.chapters { position:absolute;left:7%;bottom:12%;width:340px;min-height:135px; }
+.chapters article { position:absolute;inset:0;opacity:0;transform:translateY(25px);transition:opacity .5s,transform .6s;visibility:hidden; }
+.world[data-chapter="0"] article[data-chapter="0"],.world[data-chapter="1"] article[data-chapter="1"],.world[data-chapter="2"] article[data-chapter="2"] { opacity:1;transform:none;visibility:visible; }
+.chapters span { font:11px Arial,sans-serif;letter-spacing:.12em; }
+.chapters h3 { font-size:30px;line-height:1.1;margin:14px 0; }
+.chapters p { font:14px/1.6 Arial,sans-serif;max-width:300px; }
+.link { position:absolute;right:7%;bottom:14%;font:600 14px Arial,sans-serif;border-bottom:1px solid;padding:15px 0;display:flex;gap:45px; }
+.link:focus-visible { outline:2px solid #173d45;outline-offset:6px; }
+.track { position:absolute;bottom:6%;left:7%;display:flex;gap:8px; }
+.track i { width:45px;height:2px;background:#173d4533;transition:background .5s; }
+.world[data-chapter="0"] .track i:nth-child(1),.world[data-chapter="1"] .track i:nth-child(2),.world[data-chapter="2"] .track i:nth-child(3) { background:#173d45; }
+.hero { position:absolute;inset:0;pointer-events:none;z-index:10; }
+.hero .stage { position:absolute;inset:0;height:100%;min-height:0; }
+.world[data-enabled=false] { height:auto; }.world[data-enabled=false] .stage { position:relative; }
+@media(max-width:767px) { .heading { top:9%; }.heading h2 { font-size:40px; }.world .canvas { inset:10% -20% 10%; }.chapters { bottom:17%;width:86%; }.chapters h3 { font-size:27px; }.link { bottom:6%; }.track { bottom:8%; }.stage { min-height:740px; } }
