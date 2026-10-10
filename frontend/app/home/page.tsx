@@ -1,11 +1,10 @@
 import Hero from './components/Hero'
 import ComfortZone from './components/ComfortZone'
-import ExclusiveDeals from './components/ExclusiveDeals'
+// import ExclusiveDeals from './components/ExclusiveDeals'
 import HeroBanner from './components/Banners'
 import ExploreThemes from './components/ExploreThemes'
 import HeroSlider from '../common/HeroSlider'
-import EarlyBirdOffers from './components/EarlyBirdOffers'
-import WeOfferBest from './components/WeOfferBest'
+// import EarlyBirdOffers from './components/EarlyBirdOffers'
 import HowItWorks from './components/HowItWorks'
 import BestPackages from './components/BestPackages'
 import Hotels from './components/Hotels'
@@ -52,11 +51,10 @@ const HomePage = () => {
             <Hero />
             <JourneyScene />
             <ScrollReveal variant="slide"><ComfortZone /></ScrollReveal>
-            <ScrollReveal><ExclusiveDeals /></ScrollReveal>
+            {/* <ScrollReveal><ExclusiveDeals /></ScrollReveal> */}
             <ScrollReveal><HeroBanner /></ScrollReveal>
             <TravelWorld />
             <ScrollReveal variant="scale"><ExploreThemes /></ScrollReveal>
-            <DestinationDeck />
             <ScrollReveal>
             <HeroSlider
                 heading="Experience the Extraordinary"
@@ -64,16 +62,16 @@ const HomePage = () => {
                 slides={slides}
             />
             </ScrollReveal>
-            <ScrollReveal><EarlyBirdOffers /></ScrollReveal>
-            <ScrollReveal><WeOfferBest /></ScrollReveal>
+            <DestinationDeck />
+            {/* <ScrollReveal><EarlyBirdOffers /></ScrollReveal> */}
             <ScrollReveal><HowItWorks /></ScrollReveal>
             <ScrollReveal><BestPackages /></ScrollReveal>
             <ScrollReveal><Hotels /></ScrollReveal>
+            <ScrollReveal><Partners /></ScrollReveal>
             <ScrollReveal><NewsletterBanner /></ScrollReveal>
             <ScrollReveal variant="slide"><CustomizeBooking /></ScrollReveal>
             <ScrollReveal><VacanesBlogs /></ScrollReveal>
             {/* <ExploreTheWorld /> */}
-            <ScrollReveal><Partners /></ScrollReveal>
             <ScrollReveal><Testimonials /></ScrollReveal>
             <ScrollReveal variant="scale"><Gallery /></ScrollReveal>
             <ScrollReveal><FAQ /></ScrollReveal>

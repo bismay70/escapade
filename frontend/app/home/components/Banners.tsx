@@ -114,7 +114,7 @@ export default function HeroBanner() {
                                         <h2 className="text-3xl md:text-4xl font-gilroy-semibold mb-4">
                                             {slide.offer}
                                         </h2>
-                                        <Button className="bg-orange-500 hover:bg-orange-600 transition-colors text-white px-6 py-3 rounded-lg text-sm font-gilroy-medium">
+                        <Button className="bg-[#695B33] hover:bg-[#574a29] transition-colors text-white px-6 py-3 rounded-lg text-sm font-gilroy-medium">
                                             {slide.cta}
                                         </Button>
                                     </div>

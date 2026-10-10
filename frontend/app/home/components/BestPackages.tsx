@@ -22,11 +22,11 @@ const tabs = [
 const cards = [
     {
         type: "Hotel",
-        title: "Lemon Tree Hotel",
-        location: "New Delhi",
+        title: "Taj Hotel",
+        location: "Agra",
         price: "5,999",
         oldPrice: "12,999",
-        image: "/home/card1.png",
+        image: "/destination_india/hero-bg.png",
         timer: "Ends in 11h : 32m : 45s",
     },
     {
@@ -119,7 +119,7 @@ export default function BestPackages() {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
                                         {/* Timer */}
-                                        <div className="absolute top-4 right-4 flex items-center gap-1 bg-orange-500 text-white text-xs px-4 py-2 rounded-lg">
+                                        <div className="absolute top-4 right-4 flex items-center gap-1 bg-[#695B33] text-white text-xs px-4 py-2 rounded-lg">
                                             <span><Timer className="h-[1em] w-[1em]" /></span>{card.timer}
                                         </div>
 
@@ -136,7 +136,7 @@ export default function BestPackages() {
 
                                             <div className="flex items-end gap-2">
                                                 <span className="text-2xl font-semibold text-white font-gilroy-semibold">
-                                                    <span className="text-orange-400">₹</span> {card.price}
+                                                    <span className="text-[#c9b97a]">₹</span> {card.price}
                                                 </span>
                                                 <span className="text-sm line-through opacity-60">
                                                     {card.oldPrice}
@@ -151,7 +151,7 @@ export default function BestPackages() {
                         </Swiper>
 
                         {/* Arrow */}
-                        <button className="deals-next absolute right-[-20px] top-1/2 -translate-y-1/2 w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center shadow-lg z-10">
+                        <button className="deals-next absolute right-[-20px] top-1/2 -translate-y-1/2 w-12 h-12 bg-[#695B33] rounded-full flex items-center justify-center shadow-lg z-10">
                             <ArrowRight className="text-white" />
                         </button>
                     </div>

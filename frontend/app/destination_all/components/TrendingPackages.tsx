@@ -32,7 +32,7 @@ const TrendingPackages = () => {
                         <div className="swiper-button-prev-custom w-9 h-9 rounded-full border flex items-center justify-center cursor-pointer">
                             ‹
                         </div>
-                        <div className="swiper-button-next-custom w-9 h-9 rounded-full border flex items-center justify-center cursor-pointer text-orange-500">
+                        <div className="swiper-button-next-custom w-9 h-9 rounded-full border flex items-center justify-center cursor-pointer text-[#695B33]">
                             ›
                         </div>
                     </div>
@@ -68,7 +68,7 @@ const TrendingPackages = () => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
                                 {/* Discount */}
-                                <span className="absolute top-4 right-4 bg-orange-500 text-xs px-3 py-1 rounded-full font-medium">
+                                <span className="absolute top-4 right-4 bg-[#695B33] text-white text-xs px-3 py-1 rounded-full font-medium">
                                     25% OFF
                                 </span>
 
@@ -96,7 +96,7 @@ const TrendingPackages = () => {
 
                                     {/* Price */}
                                     <div className="flex items-center gap-2">
-                                        <span className="text-lg font-gilroy-semibold text-orange-400">
+                                        <span className="text-lg font-gilroy-semibold text-[#695B33]">
                                             ₹ 5,999
                                         </span>
                                         <span className="text-xs line-through text-gray-400">

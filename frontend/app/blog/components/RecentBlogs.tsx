@@ -72,7 +72,7 @@ const RecentBlogs = () => {
                             </p>
 
                             {/* CTA */}
-                            <button className="text-sm text-orange-500 font-gilroy-semibold hover:underline">
+                            <button className="text-sm text-[#695B33] font-gilroy-semibold hover:underline">
                                 Read More
                             </button>
                         </div>
@@ -89,7 +89,7 @@ const RecentBlogs = () => {
                         <button
                             key={n}
                             className={`w-9 h-9 rounded-lg text-sm ${n === 1
-                                ? "bg-orange-500 text-white"
+                                ? "bg-[#695B33] text-white"
                                 : "bg-gray-200 text-gray-700"
                                 }`}
                         >

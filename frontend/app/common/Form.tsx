@@ -39,7 +39,7 @@ export default function NewsletterBanner() {
                                     placeholder="Enter Your Email"
                                     className="w-full bg-white text-gray-800 px-5 py-4 rounded-xl outline-none text-sm"
                                 />
-                                <Button className="bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-sm font-gilroy-semibold h-full">
+                                <Button className="bg-[#695B33] hover:bg-[#574a29] px-8 py-4 rounded-xl text-sm font-gilroy-semibold h-full">
                                     Subscribe
                                 </Button>
                             </div>

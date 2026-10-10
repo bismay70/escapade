@@ -5,19 +5,19 @@ import Mission from "./components/Mission";
 import OurValues from "./components/Values";
 import WhyIsItGreat from "./components/WhyIsItGreat";
 import RecognitionByGovernment from "./components/Clients";
-import Footer from "./components/Footer";
+// import Footer from "./components/Footer";
 
 const AboutUsPage = () => {
     return (
         <main>
-            <Navbar />
+            {/* <Navbar /> */}
             <Hero />
             <Story />
             <Mission />
             <OurValues />
             <WhyIsItGreat />
             <RecognitionByGovernment />
-            <Footer />
+            {/* <Footer /> */}
         </main>
     )
 }

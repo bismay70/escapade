@@ -88,7 +88,7 @@ export default function VacanesBlogs() {
                                     </div>
                                 </div>
 
-                                <button className="bg-orange-500 hover:bg-orange-600 transition text-white px-5 py-2 rounded-lg text-sm font-medium">
+                            <button className="bg-[#695B33] hover:bg-[#574a29] transition text-white px-5 py-2 rounded-lg text-sm font-medium">
                                     Read More
                                 </button>
                             </div>
@@ -133,7 +133,7 @@ export default function VacanesBlogs() {
                                         </p>
                                     </div>
 
-                                    <button className="text-orange-500 text-sm font-medium mt-3 self-start">
+                                    <button className="text-[#695B33] text-sm font-medium mt-3 self-start">
                                         Read More
                                     </button>
                                 </div>
@@ -144,7 +144,7 @@ export default function VacanesBlogs() {
 
                 {/* View All */}
                 <div className="flex justify-center mt-14">
-                    <button className="bg-orange-500 hover:bg-orange-600 transition text-white px-10 py-3 rounded-xl text-sm font-medium">
+                    <button className="bg-[#695B33] hover:bg-[#574a29] transition text-white px-10 py-3 rounded-xl text-sm font-medium">
                         View All
                     </button>
                 </div>

@@ -13,7 +13,7 @@
   font: 12px "Gilroy Medium", Arial, sans-serif;
   cursor: pointer; backdrop-filter: blur(12px);
 }
-.home-motion-toggle:focus-visible { outline: 3px solid #FF6A00; outline-offset: 3px; }
+.home-motion-toggle:focus-visible { outline: 3px solid #695B33; outline-offset: 3px; }
 .home-motion-surface[data-home-motion="full"] [data-motion="card"] {
   transition: translate .45s cubic-bezier(.22,1,.36,1), box-shadow .45s ease;
 }
@@ -124,7 +124,7 @@
   --radius: 0.625rem;
   --background: #F2F4F6;
   --foreground: oklch(0.145 0 0);
-  --primary-orange: #FF6A00;
+  --primary-orange: #695B33;
   --card: oklch(1 0 0);
   --text: #16242A;
   --card-foreground: oklch(0.145 0 0);

@@ -13,7 +13,7 @@ const StateCard = ({ name, description, image }: StateCardProps) => {
             <div className='flex flex-col justify-center max-w-sm gap-4 h-full'>
                 <h2 className='text-5xl font-bold text-black font-gilroy-medium'>{name}</h2>
                 <p className='text-black font-gilroy-medium'>{description}</p>
-                <button className='bg-primary-orange text-white px-8 py-3 rounded-lg font-gilroy-medium hover:bg-black hover:text-primary-orange transition-colors w-fit'>
+                <button className='bg-[#695B33] text-white px-8 py-3 rounded-lg font-gilroy-medium hover:bg-[#10213E] transition-colors w-fit'>
                     Explore {name}
                 </button>
             </div>

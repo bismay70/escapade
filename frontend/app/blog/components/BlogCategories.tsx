@@ -29,7 +29,7 @@ const BlogCategories = () => {
                     <div>
                         <div className="rounded-2xl overflow-hidden mb-4">
                             <img
-                                src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&q=80&w=800"
+                                src="/home/card2"
                                 alt="Travel Tips"
                                 className="w-full h-[260px] object-cover"
                             />
@@ -46,7 +46,7 @@ const BlogCategories = () => {
                     <div>
                         <div className="rounded-2xl overflow-hidden mb-4">
                             <img
-                                src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=800"
+                                src="/home/card2"
                                 alt="Destination Highlights"
                                 className="w-full h-[260px] object-cover"
                             />

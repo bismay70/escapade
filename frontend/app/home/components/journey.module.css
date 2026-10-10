@@ -35,3 +35,16 @@
  .copy p { font-size: 14px; }
  .link { bottom: 4%; right: 6%; }
 }
+.stage { isolation: isolate; }
+.bgVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+.bgVideo[data-playing="true"] { opacity: 0.22; }

@@ -95,7 +95,7 @@ export default function HeroSlider({
                                         <p className="tracking-widest text-base font-gilroy-medium mb-4">
                                             {slide.offer}
                                         </p>
-                                        <Button className="bg-orange-500 hover:bg-orange-600 transition-colors text-white px-6 py-3 rounded-lg text-sm font-gilroy-medium">
+                                <Button className="bg-[#695B33] hover:bg-[#574a29] transition-colors text-white px-6 py-3 rounded-lg text-sm font-gilroy-medium">
                                             {slide.cta}
                                         </Button>
                                     </div>

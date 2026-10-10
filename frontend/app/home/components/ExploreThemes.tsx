@@ -9,33 +9,43 @@ import { ArrowRight } from "lucide-react"
 const themes = [
     {
         title: "Solo Travel",
-        desc: "Travel solo and enjoy your peaceful journey",
-        image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500&h=600&fit=crop",
+        desc: "Set your own pace and explore the world on your terms",
+        image: "https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=500&h=600&fit=crop",
     },
     {
-        title: "Romantic Travel",
-        desc: "Travel with your partner to the most beautiful places",
-        image: "https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=500&h=600&fit=crop",
+        title: "Romantic Getaway",
+        desc: "Escape together to breathtaking destinations made for two",
+        image: "/about/img/italy.jpg",
     },
     {
-        title: "Family Travel",
-        desc: "Travel with your loved ones & enjoy your journey",
-        image: "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=500&h=600&fit=crop",
+        title: "Family Adventure",
+        desc: "Create lasting memories with the ones who matter most",
+        image: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500&h=600&fit=crop",
     },
     {
         title: "Destination Wedding",
-        desc: "Travel with your loved ones & celebrate your wedding",
+        desc: "Say your vows against the most stunning backdrops on earth",
         image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500&h=600&fit=crop",
     },
     {
-        title: "Adventure Travel",
-        desc: "Go through many wonderful places across India",
-        image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=500&h=600&fit=crop",
+        title: "Adventure & Trekking",
+        desc: "Push your limits across mountains, forests and wild trails",
+        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500&h=600&fit=crop",
     },
     {
-        title: "Adventure Travel",
-        desc: "Go through many wonderful places across India",
-        image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=600&fit=crop",
+        title: "Beach & Coastal",
+        desc: "Sun, sand and sea — the perfect formula for pure relaxation",
+        image: "/destination_india/goa.png",
+    },
+    {
+        title: "Cultural Immersion",
+        desc: "Dive deep into local traditions, art and heritage",
+        image: "/about/img/india.jpg",
+    },
+    {
+        title: "Wellness Retreat",
+        desc: "Recharge your mind and body in serene, restorative settings",
+        image: "/destination_india/kerala.png",
     },
 ]
 
@@ -91,7 +101,7 @@ export default function ExploreThemes() {
                         </Swiper>
 
                         {/* Arrow */}
-                        <button className="themes-next absolute right-[-20px] top-[140px] w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center shadow-lg z-10">
+                        <button className="themes-next absolute right-[-20px] top-[140px] w-12 h-12 bg-[#695B33] rounded-full flex items-center justify-center shadow-lg z-10">
                             <ArrowRight className="text-white" />
                         </button>
                     </div>

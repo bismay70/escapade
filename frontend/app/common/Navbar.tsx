@@ -9,7 +9,7 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -32,15 +32,27 @@ const allDestinations = [
 
 export default function Navbar() {
     const [activeTab, setActiveTab] = useState("India")
+    const [scrolled, setScrolled] = useState(false)
     const pathname = usePathname()
     const onHero = pathname === "/" || pathname === "/home"
-    const navText = onHero
+    const lightText = onHero && !scrolled
+    const navText = lightText
         ? "text-white hover:text-white focus:text-white data-[state=open]:text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]"
-        : "text-text hover:text-primary-orange focus:text-text data-[state=open]:text-text"
+        : "text-text hover:text-[#695B33] focus:text-text data-[state=open]:text-text"
+
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 40)
+        onScroll()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        return () => window.removeEventListener("scroll", onScroll)
+    }, [])
 
     return (
-        <header className="w-full relative z-50">
-            {onHero && <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/45 to-transparent" />}
+        <header className={cn(
+            "fixed inset-x-0 top-0 z-50 h-16 w-full transition-colors duration-300",
+            scrolled ? "bg-white/95 shadow-sm" : "bg-transparent"
+        )}>
+            {lightText && <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/45 to-transparent" />}
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 absolute top-0 left-0 right-0 bg-none z-50 font-gilroy">
                 {/* Left */}
                 <div className="flex items-center gap-10">
@@ -167,7 +179,7 @@ export default function Navbar() {
                     <Button
                         asChild
                         variant="secondary"
-                        className="hidden sm:inline-flex bg-[#10213E] text-white hover:bg-[#17345D] rounded-full px-6 transition-all"
+                        className="hidden sm:inline-flex bg-[#695B33] text-white hover:bg-[#695B33] rounded-full px-6 transition-all"
                     >
                         <Link href="/login">Sign up</Link>
                     </Button>

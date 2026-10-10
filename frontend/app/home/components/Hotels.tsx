@@ -122,7 +122,7 @@ export default function Hotels() {
                                                 {/* Price */}
                                                 <div>
                                                     <div className="flex items-end gap-1">
-                                                        <span className="text-orange-500 text-xl font-semibold">₹</span>
+                                                        <span className="text-[#695B33] text-xl font-semibold">₹</span>
                                                         <span className="text-2xl font-gilroy-semibold text-gray-900">
                                                             {card.price}
                                                         </span>
@@ -136,7 +136,7 @@ export default function Hotels() {
                                                 </div>
 
                                                 {/* CTA */}
-                                                <Button className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg text-sm font-gilroy-medium">
+                                                <Button className="bg-[#695B33] hover:bg-[#574a29] text-white px-5 py-2 rounded-lg text-sm font-gilroy-medium">
                                                     Book Now
                                                 </Button>
                                             </div>
@@ -147,7 +147,7 @@ export default function Hotels() {
                         </Swiper>
 
                         {/* Arrow */}
-                        <button className="deals-next absolute right-[-20px] top-1/2 -translate-y-1/2 w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center shadow-lg z-10">
+                        <button className="deals-next absolute right-[-20px] top-1/2 -translate-y-1/2 w-12 h-12 bg-[#695B33] rounded-full flex items-center justify-center shadow-lg z-10">
                             <ArrowRight className="text-white" />
                         </button>
                     </div>
