@@ -2,6 +2,7 @@
 
 > A full-stack, preference-aware travel planning assistant with a multi-agent AI backend, real flight/hotel inventory via Amadeus, Stripe-powered checkout, and Firebase authentication.
 
+<img src="ss.png" width="100%" alt="Vacanes Screenshot">
 ---
 
 ## Table of Contents

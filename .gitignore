@@ -12,3 +12,4 @@ backend/secrets/
 **/service-account*.json
 
 .claude
+ans.md
